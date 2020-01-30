@@ -1,0 +1,46 @@
+﻿html {
+    font-size: 16px;
+
+}
+
+
+header h1 {
+    text-align: center;
+    background-color: #0E7AC4;
+    color: #FFFFFF;
+    width: 800px;
+    margin: auto;
+    font-size: 2rem;
+    padding: 10px 0;
+}
+
+
+h2 {
+    text-align: center;
+    background-color: #58BE89;
+    width: 800px;
+    margin: auto;
+    color: #FFFFFF;
+    font-size: 1.8rem;
+    padding: 10px 0;
+}
+
+h3 {
+    font-size: 1rem;
+
+}
+section {
+    width: 600px;
+    margin: auto;
+    border-style: solid;
+    border-color: black;
+}
+
+h4 {
+    font-size: 0.8rem;
+    padding-bottom: 20px;
+}
+ul {
+    font-size: 1.2rem;
+}
+
