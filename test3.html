@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>test3</title>
+	<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+</head>
+<body>
+
+    <div>カードを引く</div>
+    <div>勝負に挑む</div>
+<h1>0</h1>
+<p>カードはxでした</p>
+<h2></h2>
+
+<script type="text/javascript">
+    h1+=Math.floor(Math.random() * 5)
+    if (h1 > 10) {
+        $("h2").text("敗北")
+    }
+    else {
+        if(h1>8){
+             $("h2").text("勝利")
+        }
+     else{
+     $("h2").text("敗北")
+        }
+    }
+
+    $("h1").text(0)
+</script>
+
+</body>
+</html>
