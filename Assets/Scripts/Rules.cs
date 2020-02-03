@@ -80,7 +80,7 @@ public class Rules
     /// <param name="ToY"></param>
     public bool IsVaild(int moveChessID, int[,] position, int FromX, int FromY, int ToX, int ToY)
     {
-        if (FromX == ToX || FromY == ToY)//原地踏步
+        if (FromX == ToX && FromY == ToY)//原地踏步
         {
             return false;
         }
@@ -133,7 +133,7 @@ public class Rules
                     return false;
                 }
                 break;
-            case 13://黑象
+            case 6://黑象
                 if (ToX > 4)//过河
                 {
                     return false;
@@ -148,7 +148,7 @@ public class Rules
                     return false;
                 }
                 break;
-            case 6://红相
+            case 13://红相
                 if (ToX < 5)//过河
                 {
                     return false;
