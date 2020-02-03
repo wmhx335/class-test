@@ -352,7 +352,7 @@ public class Rules
                         //右
                         if (FromY < ToY)
                         {
-                            for (i = FromY; i < ToY; i++)
+                            for (i = FromY+1; i < ToY; i++)
                             {
                                 if (position[FromX, i] != 0)
                                 {
@@ -367,7 +367,7 @@ public class Rules
                         //左
                         else
                         {
-                            for (i = ToY; i < FromY; i++)
+                            for (i = ToY+1; i < FromY; i++)
                             {
                                 if (position[FromX, i] != 0)
                                 {
@@ -392,10 +392,11 @@ public class Rules
                                 {
                                     count++;
                                 }
-                                if (count != 1)
-                                {
-                                    return false;
-                                }
+                                
+                            }
+                            if (count != 1)
+                            {
+                                return false;
                             }
                         }
                         //上
@@ -406,11 +407,11 @@ public class Rules
                                 if (position[j, FromY] != 0)
                                 {
                                     count++;
-                                }
-                                if (count != 1)
-                                {
-                                    return false;
-                                }
+                                } 
+                            }
+                            if (count != 1)
+                            {
+                                return false;
                             }
                         }
                     }
