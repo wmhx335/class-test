@@ -118,6 +118,7 @@ public class GameManager : MonoBehaviour
         {
             canMoveUIStack.Push(Instantiate(canMovePosUIGo));
         }
+        currentCanMoveUIStack = new Stack<GameObject>();
     }
 
 

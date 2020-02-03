@@ -51,4 +51,14 @@ public class MovingOfChess
         gameManager.chessBoard[x1, y1] = 0;
         gameManager.BeEat(secondChess);
     }
+    /// <summary>
+    /// 显示当前选中棋子可以移动到的位置
+    /// </summary>
+    /// <param name="FromX"></param>
+    /// <param name="FromY"></param>
+    /// <param name="chessMove">当前轮次</param>
+    public void ClickChess(int FromX,int FromY,bool chessMove)
+    {
+
+    }
 }
