@@ -65,7 +65,7 @@ public class MovingOfChess
                 GetJiangMove(gameManager.chessBoard, FromX, FromY);
                 break;
             case 8://帅
-                GetShuaiMove(gameManager.chessBoard,FromX,FromY);
+                GetShuaiMove(gameManager.chessBoard, FromX, FromY);
                 break;
             case 2:
             case 9://車
@@ -101,6 +101,7 @@ public class MovingOfChess
     }
 
     #region 得到对应种类的棋子当前可以移动的所有路径
+
     /// <summary>
     /// 将帅
     /// </summary>
@@ -111,13 +112,14 @@ public class MovingOfChess
         {
             for (int y = 3; y < 6; y++)
             {
-                if (gameManager.rules.IsValidMove(position,FromX,FromY,x,y))
+                if (gameManager.rules.IsValidMove(position, FromX, FromY, x, y))
                 {
                     GetCanMovePos(position, FromX, FromY, x, y);
                 }
             }
         }
     }
+
     private void GetShuaiMove(int[,] position, int FromX, int FromY)
     {
         for (int x = 7; x < 10; x++)
@@ -136,17 +138,299 @@ public class MovingOfChess
     /// </summary>
     private void GetJuMove(int[,] position, int FromX, int FromY)
     {
-
+        int x, y;
+        int chessID;
+        //得到当前选中棋子的ID，用于判断敌我
+        chessID = position[FromX, FromY];
+        //右
+        x = FromX;
+        y = FromY + 1;
+        while (y < 9)
+        {
+            //判断空格子
+            if (position[x, y] == 0)
+            {
+                GetCanMovePos(position, FromX, FromY, x, y);
+            }
+            else
+            {
+                if (!gameManager.rules.IsSameSide(chessID, position[x, y]))
+                {
+                    GetCanMovePos(position, FromX, FromY, x, y);
+                }
+                break;
+            }
+            y++;
+        }
+        //左
+        x = FromX;
+        y = FromY - 1;
+        while (y >= 0)
+        {
+            //判断空格子
+            if (position[x, y] == 0)
+            {
+                GetCanMovePos(position, FromX, FromY, x, y);
+            }
+            else
+            {
+                if (!gameManager.rules.IsSameSide(chessID, position[x, y]))
+                {
+                    GetCanMovePos(position, FromX, FromY, x, y);
+                }
+                break;
+            }
+            y--;
+        }
+        //下
+        x = FromX + 1;
+        y = FromY;
+        while (x < 10)
+        {
+            //判断空格子
+            if (position[x, y] == 0)
+            {
+                GetCanMovePos(position, FromX, FromY, x, y);
+            }
+            else
+            {
+                if (!gameManager.rules.IsSameSide(chessID, position[x, y]))
+                {
+                    GetCanMovePos(position, FromX, FromY, x, y);
+                }
+                break;
+            }
+            x++;
+        }
+        //上
+        x = FromX - 1;
+        y = FromY;
+        while (x >= 0)
+        {
+            //判断空格子
+            if (position[x, y] == 0)
+            {
+                GetCanMovePos(position, FromX, FromY, x, y);
+            }
+            else
+            {
+                if (!gameManager.rules.IsSameSide(chessID, position[x, y]))
+                {
+                    GetCanMovePos(position, FromX, FromY, x, y);
+                }
+                break;
+            }
+            x--;
+        }
     }
 
     private void GetMaMove(int[,] position, int FromX, int FromY)
     {
+        int x, y;
+        //竖
+        //右下
+        x = FromX + 2;
+        y = FromY + 1;
+        if ((x < 10 && y < 9) && gameManager.rules.IsValidMove(position, FromX, FromY, x, y))
+        {
+            GetCanMovePos(position, FromX, FromY, x, y);
+        }
+        //右上
+        x = FromX - 2;
+        y = FromY + 1;
+        if ((x >= 0 && y < 9) && gameManager.rules.IsValidMove(position, FromX, FromY, x, y))
+        {
+            GetCanMovePos(position, FromX, FromY, x, y);
+        }
+        //左下
+        x = FromX + 2;
+        y = FromY - 1;
+        if ((x < 10 && y >= 0) && gameManager.rules.IsValidMove(position, FromX, FromY, x, y))
+        {
+            GetCanMovePos(position, FromX, FromY, x, y);
+        }
+        //左上
+        x = FromX - 2;
+        y = FromY - 1;
+        if ((x >= 0 && y >= 0) && gameManager.rules.IsValidMove(position, FromX, FromY, x, y))
+        {
+            GetCanMovePos(position, FromX, FromY, x, y);
+        }
 
+        //横
+        //右下
+        x = FromX + 1;
+        y = FromY + 2;
+        if ((x < 10 && y < 9) && gameManager.rules.IsValidMove(position, FromX, FromY, x, y))
+        {
+            GetCanMovePos(position, FromX, FromY, x, y);
+        }
+        //右上
+        x = FromX - 1;
+        y = FromY + 2;
+        if ((x >= 0 && y < 9) && gameManager.rules.IsValidMove(position, FromX, FromY, x, y))
+        {
+            GetCanMovePos(position, FromX, FromY, x, y);
+        }
+        //左下
+        x = FromX + 1;
+        y = FromY - 2;
+        if ((x < 10 && y >= 0) && gameManager.rules.IsValidMove(position, FromX, FromY, x, y))
+        {
+            GetCanMovePos(position, FromX, FromY, x, y);
+        }
+        //左上
+        x = FromX - 1;
+        y = FromY - 2;
+        if ((x >= 0 && y >= 0) && gameManager.rules.IsValidMove(position, FromX, FromY, x, y))
+        {
+            GetCanMovePos(position, FromX, FromY, x, y);
+        }
     }
 
     private void GetPaoMove(int[,] position, int FromX, int FromY)
     {
+        int x, y;
+        //是否满足翻山条件
+        bool flag;
+        int chessID;
+        chessID = position[FromX, FromY];
+        //右
+        x = FromX;
+        y = FromY + 1;
+        flag = false;
+        while (y < 9)
+        {
+            //是否为空格
+            if (position[x, y] == 0)
+            {
+                //未达成翻山条件前显示所有可移动路径，达成之后不可空翻
+                if (!flag)
+                {
+                    GetCanMovePos(position, FromX, FromY, x, y);
+                }
+            }
+            //棋子
+            else
+            {
+                //条件未满足时，开启flag
+                if (!flag)
+                {
+                    flag = true;
+                }
+                //判断敌我
+                else
+                {
+                    if (!gameManager.rules.IsSameSide(chessID, position[x, y]))
+                    {
+                        GetCanMovePos(position, FromX, FromY, x, y);
+                    }
+                    break;
+                }
+            }
+            y++;
+        }
 
+        //左
+        y = FromY - 1;
+        flag = false;
+        while (y >= 0)
+        {
+            if (position[x, y] == 0)
+            {
+                if (!flag)
+                {
+                    GetCanMovePos(position, FromX, FromY, x, y);
+                }
+            }
+            else
+            {
+                if (!flag)
+                {
+                    flag = true;
+                }
+                else
+                {
+                    if (!gameManager.rules.IsSameSide(chessID, position[x, y]))
+                    {
+                        GetCanMovePos(position, FromX, FromY, x, y);
+                    }
+                    break;
+                }
+            }
+            y--;
+        }
+
+        //下
+        x = FromX + 1;
+        y = FromY;
+        flag = false;
+        while (x < 10)
+        {
+            //是否为空格
+            if (position[x, y] == 0)
+            {
+                //未达成翻山条件前显示所有可移动路径，达成之后不可空翻
+                if (!flag)
+                {
+                    GetCanMovePos(position, FromX, FromY, x, y);
+                }
+            }
+            //棋子
+            else
+            {
+                //条件未满足时，开启flag
+                if (!flag)
+                {
+                    flag = true;
+                }
+                //判断敌我
+                else
+                {
+                    if (!gameManager.rules.IsSameSide(chessID, position[x, y]))
+                    {
+                        GetCanMovePos(position, FromX, FromY, x, y);
+                    }
+                    break;
+                }
+            }
+            x++;
+        }
+
+        //上
+        x = FromX - 1;
+        flag = false;
+        while (x >= 0)
+        {
+            //是否为空格
+            if (position[x, y] == 0)
+            {
+                //未达成翻山条件前显示所有可移动路径，达成之后不可空翻
+                if (!flag)
+                {
+                    GetCanMovePos(position, FromX, FromY, x, y);
+                }
+            }
+            //棋子
+            else
+            {
+                //条件未满足时，开启flag
+                if (!flag)
+                {
+                    flag = true;
+                }
+                //判断敌我
+                else
+                {
+                    if (!gameManager.rules.IsSameSide(chessID, position[x, y]))
+                    {
+                        GetCanMovePos(position, FromX, FromY, x, y);
+                    }
+                    break;
+                }
+            }
+            x--;
+        }
     }
 
     private void GetB_ShiMove(int[,] position, int FromX, int FromY)
@@ -183,28 +467,28 @@ public class MovingOfChess
         //右下
         x = FromX + 2;
         y = FromY + 2;
-        if (gameManager.rules.IsValidMove(position,FromX,FromY,x,y)&&x<10&&y<9)
+        if (x < 10 && y < 9 && gameManager.rules.IsValidMove(position, FromX, FromY, x, y))
         {
             GetCanMovePos(position, FromX, FromY, x, y);
         }
         //右上
         x = FromX - 2;
         y = FromY + 2;
-        if (gameManager.rules.IsValidMove(position, FromX, FromY, x, y)&&x>=0&&y<9)
+        if (x >= 0 && y < 9 && gameManager.rules.IsValidMove(position, FromX, FromY, x, y))
         {
             GetCanMovePos(position, FromX, FromY, x, y);
         }
         //左下
         x = FromX + 2;
         y = FromY - 2;
-        if (gameManager.rules.IsValidMove(position, FromX, FromY, x, y)&&x<10&&y>=0)
+        if (x < 10 && y >= 0 && gameManager.rules.IsValidMove(position, FromX, FromY, x, y))
         {
             GetCanMovePos(position, FromX, FromY, x, y);
         }
         //左上
         x = FromX - 2;
         y = FromY - 2;
-        if (gameManager.rules.IsValidMove(position, FromX, FromY, x, y)&&x>=0&&y>=0)
+        if (x >= 0 && y >= 0 && gameManager.rules.IsValidMove(position, FromX, FromY, x, y))
         {
             GetCanMovePos(position, FromX, FromY, x, y);
         }
@@ -212,10 +496,58 @@ public class MovingOfChess
 
     private void GetZuMove(int[,] position, int FromX, int FromY)
     {
+        int x, y;
+        int chessID;
+        chessID = position[FromX, FromY];
+        x = FromX + 1;
+        y = FromY;
+        if (x < 10 && !gameManager.rules.IsSameSide(chessID, position[x, y]))
+        {
+            GetCanMovePos(position, FromX, FromY, x, y);
+        }
+        if (FromX > 4)
+        {
+            x = FromX;
+            y = FromY + 1;//右
+            if (y < 9 && !gameManager.rules.IsSameSide(chessID, position[x, y]))
+            {
+                GetCanMovePos(position, FromX, FromY, x, y);
+            }
+            y = FromY - 1;//左
+            if (y >= 10 && !gameManager.rules.IsSameSide(chessID, position[x, y]))
+            {
+                GetCanMovePos(position, FromX, FromY, x, y);
+            }
+        }
 
     }
+
     private void GetBingMove(int[,] position, int FromX, int FromY)
     {
+        int x, y;
+        int chessID;
+        chessID = position[FromX, FromY];
+        x = FromX - 1;
+        y = FromY;
+        if (x > 0 && !gameManager.rules.IsSameSide(chessID, position[x, y]))
+        {
+            GetCanMovePos(position, FromX, FromY, x, y);
+        }
+        //过河后
+        if (FromX < 5)
+        {
+            x = FromX;
+            y = FromY + 1;//右
+            if (y < 9 && !gameManager.rules.IsSameSide(chessID, position[x, y]))
+            {
+                GetCanMovePos(position, FromX, FromY, x, y);
+            }
+            y = FromY - 1;//左
+            if (y >= 10 && !gameManager.rules.IsSameSide(chessID, position[x, y]))
+            {
+                GetCanMovePos(position, FromX, FromY, x, y);
+            }
+        }
 
     }
 
@@ -223,6 +555,24 @@ public class MovingOfChess
 
     private void GetCanMovePos(int[,] position, int FromX, int FromY, int ToX, int ToY)
     {
+        if (!gameManager.rules.KingKill(position, FromX, FromY, ToX, ToY))
+        {
+            return;
+        }
+        GameObject item;
+        //是空格子
+        if (position[ToX, ToY] == 0)
+        {
+            item = gameManager.PopCanMoveUI();
+        }
+        //是可吃棋子
+        else
+        {
+            item = gameManager.canEatPosUIGo;
+        }
+        item.transform.SetParent(gameManager.boardGrid[ToX, ToY].transform);
+        item.transform.localPosition = Vector3.zero;
+        item.transform.localScale = Vector3.one;
 
     }
 }

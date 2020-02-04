@@ -63,6 +63,7 @@
     <Compile Include="Assets\Scripts\AudioSourceManager.cs" />
     <Compile Include="Assets\Scripts\Checkmate.cs" />
     <Compile Include="Assets\Scripts\ChessOrGrid.cs" />
+    <Compile Include="Assets\Scripts\ChessReseting.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\MovingOfChess.cs" />
     <Compile Include="Assets\Scripts\Rules.cs" />

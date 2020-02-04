@@ -71,10 +71,12 @@ public class ChessOrGrid : MonoBehaviour
     {
 
         int FromX, FromY, ToX, ToY;
+        gameManager.HideCanEatUI();
         switch (itemColorID)
         {
             //空格子
             case 0:
+                gameManager.ClearCurrentCanMoveUIStack();
                 ToX = x;
                 ToY = y;
                 //第一次点空格子
@@ -139,11 +141,14 @@ public class ChessOrGrid : MonoBehaviour
 
             //黑棋
             case 1:
+                gameManager.ClearCurrentCanMoveUIStack();
                 if (!gameManager.chessMove)//黑色轮次
                 {
                     FromX = x;
                     FromY = y;
                     //显示所有可移动路径
+
+                    gameManager.movingOfChess.ClickChess(FromX, FromY);
                     gameManager.lastChessOrGrid = this;
                     gameManager.ShowClickUI(transform);
                 }
@@ -179,10 +184,13 @@ public class ChessOrGrid : MonoBehaviour
 
             //红棋
             case 2:
+                gameManager.ClearCurrentCanMoveUIStack();
                 if (gameManager.chessMove)//红色轮次
                 {
                     FromX = x;
                     FromY = y;
+
+                    gameManager.movingOfChess.ClickChess(FromX, FromY);
                     gameManager.lastChessOrGrid = this;
                     gameManager.ShowClickUI(transform);
                 }
@@ -219,6 +227,8 @@ public class ChessOrGrid : MonoBehaviour
             default:
                 break;
         }
+
+
     }
 
 
