@@ -105,6 +105,9 @@ public class ChessOrGrid : MonoBehaviour
                         return;
                     }
                     //棋子移动
+                    int chessOneID = gameManager.chessBoard[FromX, FromY];
+                    int chessTwoID = gameManager.chessBoard[ToX, ToY];
+                    gameManager.chessReseting.AddChess(gameManager.chessReseting.resetCount,FromX,FromY,ToX,ToY,chessOneID,chessTwoID);
                     gameManager.movingOfChess.IsMove(gameManager.lastChessOrGrid.gameObject,gridGo,FromX,FromY,ToX,ToY);
                     UiManager.Instance.ShowTip("黑方走");
                     gameManager.checkmate.JudgeIfCheckmate();
@@ -130,6 +133,9 @@ public class ChessOrGrid : MonoBehaviour
                     {
                         return;
                     }
+                    int chessOneID = gameManager.chessBoard[FromX, FromY];
+                    int chessTwoID = gameManager.chessBoard[ToX, ToY];
+                    gameManager.chessReseting.AddChess(gameManager.chessReseting.resetCount, FromX, FromY, ToX, ToY, chessOneID, chessTwoID);
                     gameManager.movingOfChess.IsMove(gameManager.lastChessOrGrid.gameObject, gridGo, FromX, FromY, ToX, ToY);
                     UiManager.Instance.ShowTip("红方走");
                     gameManager.checkmate.JudgeIfCheckmate();
@@ -173,6 +179,9 @@ public class ChessOrGrid : MonoBehaviour
                     {
                         return;
                     }
+                    int chessOneID = gameManager.chessBoard[FromX, FromY];
+                    int chessTwoID = gameManager.chessBoard[ToX, ToY];
+                    gameManager.chessReseting.AddChess(gameManager.chessReseting.resetCount, FromX, FromY, ToX, ToY, chessOneID, chessTwoID);
                     gameManager.movingOfChess.IsEat(gameManager.lastChessOrGrid.gameObject,gameObject,FromX, FromY, ToX, ToY);
                     gameManager.chessMove = false;
                     UiManager.Instance.ShowTip("黑方走");
@@ -215,6 +224,9 @@ public class ChessOrGrid : MonoBehaviour
                     {
                         return;
                     }
+                    int chessOneID = gameManager.chessBoard[FromX, FromY];
+                    int chessTwoID = gameManager.chessBoard[ToX, ToY];
+                    gameManager.chessReseting.AddChess(gameManager.chessReseting.resetCount, FromX, FromY, ToX, ToY, chessOneID, chessTwoID);
                     gameManager.movingOfChess.IsEat(gameManager.lastChessOrGrid.gameObject, gameObject, FromX, FromY, ToX, ToY);
                     gameManager.chessMove = true;
                     UiManager.Instance.ShowTip("红方走");

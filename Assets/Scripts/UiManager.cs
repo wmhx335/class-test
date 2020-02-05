@@ -114,7 +114,7 @@ public class UiManager : MonoBehaviour
     /// </summary>
     public void UnDo()
     {
-
+        gameManager.chessReseting.ResetChess();
     }
 
     /// <summary>
@@ -122,7 +122,7 @@ public class UiManager : MonoBehaviour
     /// </summary>
     public void Replay()
     {
-
+        gameManager.Replay();
     }
 
     /// <summary>

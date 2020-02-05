@@ -48,7 +48,8 @@ public class GameManager : MonoBehaviour
     public ChessOrGrid lastChessOrGrid;//上一次点击到的对象
     public Rules rules;//规则类
     public MovingOfChess movingOfChess;//移动类
-    public Checkmate checkmate;
+    public Checkmate checkmate;//将军检测类
+    public ChessReseting chessReseting;//悔棋
     public GameObject eatChessPool;//被吃掉的棋子池
     public GameObject clickChessUIGo;//选中棋子的UI
     public GameObject lastPosUIGo;//棋子移动前的位置
@@ -64,7 +65,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         //测试
-        chessPeople = 1;
+        chessPeople = 2;
         ResetGame();
 
     }
@@ -96,7 +97,7 @@ public class GameManager : MonoBehaviour
             {9,10,13,12,8,12,13,10,9}
         };
         boardGrid = new GameObject[10, 9];
-        if (chessPeople == 1)
+        if (chessPeople == 1|| chessPeople == 2)
         {
             boardGo = boardGos[0];
         }
@@ -112,6 +113,10 @@ public class GameManager : MonoBehaviour
         movingOfChess = new MovingOfChess(this);
         //将军检测对象
         checkmate = new Checkmate();
+        //悔棋类对象
+        chessReseting = new ChessReseting();
+        chessReseting.resetCount = 0;
+        chessReseting.chessSteps = new ChessReseting.Chess[400];
         //移动UI显示的栈
         canMoveUIStack = new Stack<GameObject>();
         for (int i=0;i<40;i++)
@@ -149,7 +154,6 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// 实例化棋子
     /// </summary>
-
     private void InitChess()
     {
         for (int i = 0; i < 10; i++)
@@ -300,4 +304,21 @@ public class GameManager : MonoBehaviour
     }
 
     #endregion
+
+    /// <summary>
+    /// 重玩
+    /// </summary>
+    public void Replay()
+    {
+        HideLastPositionUI();
+        HideClickUI();
+        HideCanEatUI();
+        ClearCurrentCanMoveUIStack();
+        lastChessOrGrid = null;
+        UiManager.Instance.ShowTip("红方走");
+        for (int i=chessReseting.resetCount;i>0;i--)
+        {
+            chessReseting.ResetChess();
+        }
+    }
 }
