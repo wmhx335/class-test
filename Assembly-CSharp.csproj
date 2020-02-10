@@ -67,6 +67,7 @@
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\MovingOfChess.cs" />
     <Compile Include="Assets\Scripts\Rules.cs" />
+    <Compile Include="Assets\Scripts\SearchEngine.cs" />
     <Compile Include="Assets\Scripts\UiManager.cs" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>D:/UNITY/象棋/ChessProject/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>

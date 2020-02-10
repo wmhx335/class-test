@@ -50,12 +50,14 @@ public class GameManager : MonoBehaviour
     public MovingOfChess movingOfChess;//移动类
     public Checkmate checkmate;//将军检测类
     public ChessReseting chessReseting;//悔棋
+    public SearchEngine searchEngine;//搜索引擎
     public GameObject eatChessPool;//被吃掉的棋子池
     public GameObject clickChessUIGo;//选中棋子的UI
     public GameObject lastPosUIGo;//棋子移动前的位置
     public GameObject canEatPosUIGo;//可以吃掉的棋子UI显示
     private Stack<GameObject> canMoveUIStack;//移动位置UI显示游戏物体的对象池
     private Stack<GameObject> currentCanMoveUIStack;//当前移动位置UI已经显示的游戏物体栈；
+    
 
     private void Awake()
     {
@@ -65,7 +67,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         //测试
-        chessPeople = 2;
+        chessPeople = 1;
         ResetGame();
 
     }
@@ -124,6 +126,8 @@ public class GameManager : MonoBehaviour
             canMoveUIStack.Push(Instantiate(canMovePosUIGo));
         }
         currentCanMoveUIStack = new Stack<GameObject>();
+        searchEngine = new SearchEngine();
+
     }
 
 

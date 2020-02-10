@@ -114,6 +114,19 @@ public class ChessOrGrid : MonoBehaviour
                     gameManager.chessMove = false;
                     gameManager.lastChessOrGrid = this;
                     gameManager.HideClickUI();
+                    if (gameManager.gameOver)
+                    {
+                        return;
+                    }
+                    if (gameManager.chessPeople==2)
+                    {
+                        return;
+                    }
+                    //黑方轮次 AI下棋
+                    if (!gameManager.chessMove)
+                    {
+                        StartCoroutine("Robot");
+                    }
                 }
                 else//黑方轮次
                 {
@@ -242,6 +255,26 @@ public class ChessOrGrid : MonoBehaviour
 
 
     }
+    /// <summary>
+    /// 开启AI下棋的协程
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator Robot()
+    {
+        UiManager.Instance.ShowTip("对方正在思考");
+        yield return new WaitForSeconds(0.2f);
+        RobortMove();
+    }
 
-
+    /// <summary>
+    /// AI下棋方法
+    /// </summary>
+    private void RobortMove()
+    {
+        gameManager.movingOfChess.HaveGoodMove(
+            gameManager.searchEngine.SearchGoodMove(gameManager.chessBoard));
+        gameManager.chessMove = true;
+        UiManager.Instance.ShowTip("红方走");
+        gameManager.checkmate.JudgeIfCheckmate();
+    }
 }

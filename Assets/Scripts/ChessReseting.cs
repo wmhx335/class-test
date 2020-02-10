@@ -18,7 +18,7 @@ public class ChessReseting
     }
 
     /// <summary>
-    /// 记录每一步悔棋的具体棋子结构体
+    /// 记录每一步棋的具体内容的结构体
     /// </summary>
     public struct Chess
     {
