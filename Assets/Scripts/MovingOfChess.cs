@@ -1095,49 +1095,49 @@ public class MovingOfChess
                     chessID = position[i,j];
                     if (!side&&gameManager.rules.isRed(chessID))
                     {
-                        //奇数层AI产生黑方走法跳过红方
+                        //偶数层AI产生黑方走法跳过红方
                         continue;
                     }
                     if (side&&gameManager.rules.isBlack(chessID))
                     {
-                        //偶数层player产生红方走法跳过黑方
+                        //奇数层player产生红方走法跳过黑方
                         continue;
                     }
                     switch (chessID)
                     {
                         case 1://将
-                            GetJiangMove(gameManager.chessBoard, i, j);
+                            GetJiangMove(position, i, j,depth);
                             break;
                         case 8://帅
-                            GetShuaiMove(gameManager.chessBoard, i, j);
+                            GetShuaiMove(position, i, j, depth);
                             break;
                         case 2:
                         case 9://車
-                            GetJuMove(gameManager.chessBoard, i, j);
+                            GetJuMove(position, i, j, depth);
                             break;
                         case 3:
                         case 10://马
-                            GetMaMove(gameManager.chessBoard, i, j);
+                            GetMaMove(position, i, j, depth);
                             break;
                         case 4:
                         case 11://炮
-                            GetPaoMove(gameManager.chessBoard, i, j);
+                            GetPaoMove(position, i, j, depth);
                             break;
                         case 5:
-                            GetB_ShiMove(gameManager.chessBoard, i, j);
+                            GetB_ShiMove(position, i, j, depth);
                             break;
                         case 12://士
-                            GetR_ShiMove(gameManager.chessBoard, i, j);
+                            GetR_ShiMove(position, i, j, depth);
                             break;
                         case 6:
                         case 13://象
-                            GetXiangMove(gameManager.chessBoard, i, j);
+                            GetXiangMove(position, i, j, depth);
                             break;
                         case 7:
-                            GetZuMove(gameManager.chessBoard, i, j);
+                            GetZuMove(position, i, j, depth);
                             break;
                         case 14://兵
-                            GetBingMove(gameManager.chessBoard, i, j);
+                            GetBingMove(position, i, j, depth);
                             break;
                         default:
                             break;
