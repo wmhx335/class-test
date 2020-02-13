@@ -1168,6 +1168,7 @@ public class MovingOfChess
             moveList[depth, moveCount].to.x = ToX;
             moveList[depth, moveCount].to.y = ToY;
             moveCount++;
+           // gameManager.searchEngine.AddHistoryScore(moveList[depth,moveCount],depth);
         }
     }
 }

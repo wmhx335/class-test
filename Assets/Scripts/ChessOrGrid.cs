@@ -166,7 +166,6 @@ public class ChessOrGrid : MonoBehaviour
                     FromX = x;
                     FromY = y;
                     //显示所有可移动路径
-
                     gameManager.movingOfChess.ClickChess(FromX, FromY);
                     gameManager.lastChessOrGrid = this;
                     gameManager.ShowClickUI(transform);
@@ -201,6 +200,19 @@ public class ChessOrGrid : MonoBehaviour
                     gameManager.lastChessOrGrid = null;
                     gameManager.checkmate.JudgeIfCheckmate();
                     gameManager.HideClickUI();
+                    if (gameManager.gameOver)
+                    {
+                        return;
+                    }
+                    if (gameManager.chessPeople == 2)
+                    {
+                        return;
+                    }
+                    //黑方轮次 AI下棋
+                    if (!gameManager.chessMove)
+                    {
+                        StartCoroutine("Robot");
+                    }
                 }
                 break;
 
@@ -272,7 +284,7 @@ public class ChessOrGrid : MonoBehaviour
     private void RobortMove()
     {
         gameManager.movingOfChess.HaveGoodMove(
-            gameManager.searchEngine.SearchGoodMove(gameManager.chessBoard));
+        gameManager.searchEngine.SearchGoodMove(gameManager.chessBoard));
         gameManager.chessMove = true;
         UiManager.Instance.ShowTip("红方走");
         gameManager.checkmate.JudgeIfCheckmate();

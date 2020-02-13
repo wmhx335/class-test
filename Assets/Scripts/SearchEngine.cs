@@ -92,8 +92,10 @@ public class SearchEngine
             }
         }
         //调用具体搜索算法
-        NegaMax(searchDepth);
-        //AlphBeta(searchDepth,-20000,20000);
+        //NegaMax(searchDepth);
+        //AlphBeta(searchDepth, -20000, 20000);
+        MergeSortAlphaBeta(searchDepth, -20000, 20000);
+
         GameObject item1 = gameManager.boardGrid[bestStep.from.x, bestStep.from.y];
         GameObject item2 = gameManager.boardGrid[bestStep.to.x, bestStep.to.y];
         bestStep.gridOne = item1;
@@ -112,7 +114,7 @@ public class SearchEngine
 
         return bestStep;
     }
-
+    #region 搜索算法
     /// <summary>
     /// 负极大值算法
     /// </summary>
@@ -128,9 +130,9 @@ public class SearchEngine
         int count;
         //当前棋局下将帅是否阵亡
         int willKillKing;
-        willKillKing = IsGameOver(unrealBoard, depth);
         //当前棋局下移动的棋子对应ID
         int chessID;
+        willKillKing = IsGameOver(unrealBoard, depth);
         if (willKillKing != 0)
         {
             //棋局结束，将帅有阵亡
@@ -207,6 +209,170 @@ public class SearchEngine
         }
         return alpha;
     }
+
+    /// <summary>
+    /// 归并排序AlphBeta剪枝优化算法
+    /// </summary>
+    /// <param name="depth"></param>
+    /// <param name="alpha"></param>
+    /// <param name="beta"></param>
+    /// <returns></returns>
+    private int MergeSortAlphaBeta(int depth, int alpha, int beta)
+    {
+        int score, count, willKillKing, chessID;
+        willKillKing = IsGameOver(unrealBoard, depth);
+        if (willKillKing != 0)
+        {
+            return willKillKing;
+        }
+
+        if (depth <= 0)
+        {
+            return Eveluate(unrealBoard, (searchDepth - depth) % 2 != 0);
+        }
+        count = gameManager.movingOfChess.CreatePossibleMove(unrealBoard, depth, (searchDepth - depth) % 2 != 0);
+        MergeSort(gameManager.movingOfChess.moveList, count, depth);
+        for (int i = 0; i < count; i++)
+        {
+            chessID = MakeMove(gameManager.movingOfChess.moveList[depth, i]);
+            score = -AlphBeta(depth - 1, -beta, -alpha);
+            UnMakeMove(gameManager.movingOfChess.moveList[depth, i], chessID);
+            //发生剪枝
+            if (score >= beta)
+            {
+                return beta;
+            }
+            if (score > alpha)
+            {
+                alpha = score;
+                if (depth == searchDepth)
+                {
+                    bestStep = gameManager.movingOfChess.moveList[depth, i];
+                    AddHistoryScore(bestStep, depth);
+                }
+            }
+        }
+        return alpha;
+    }
+    //历史启发
+    //历史记录表
+    //字典 键：着法 值：历史得分 每给予一个着法，就可以获取对应历史得分
+    private Dictionary<ChessReseting.Chess, int> historyDic = new Dictionary<ChessReseting.Chess, int>();
+
+    /// <summary>
+    /// 为着法添加历史记录得分
+    /// </summary>
+    /// <param name="move">着法</param>
+    /// <param name="depth">深度</param>
+    public void AddHistoryScore(ChessReseting.Chess move, int depth)
+    {
+        //当前历史记录中有此着法
+        if (historyDic.TryGetValue(move, out int score))
+        {
+            historyDic[move] += 2 << depth;
+        }
+        //没有此着法
+        else
+        {
+            historyDic.Add(move, 2 << depth);
+        }
+    }
+
+    /// <summary>
+    /// 取得给定着法的历史得分
+    /// </summary>
+    /// <param name="move"></param>
+    /// <returns></returns>
+    private int GetHistoryScore(ChessReseting.Chess move)
+    {
+        historyDic.TryGetValue(move, out int score);
+        return score;
+    }
+
+    /// <summary>
+    /// 归并排序
+    /// </summary>
+    /// <param name="arr"></param>
+    /// <param name="count"></param>
+    /// <param name="depth"></param>
+    private void MergeSort(ChessReseting.Chess[,] move, int count, int depth)
+    {
+        ChessReseting.Chess[,] temp = new ChessReseting.Chess[8, 80];
+        Sort(move,0,count,temp,depth);
+    }
+
+    /// <summary>
+    /// 归并排序的分治方法
+    /// </summary>
+    /// <param name="move"></param>
+    /// <param name="startIndex">分段数组的开始索引</param>
+    /// <param name="endIndex">分段数组的结束索引</param>
+    /// <param name="temp">临时数组</param>
+    /// <param name="depth">为取数组中着法元素的必要条件深度</param>
+    private void Sort(ChessReseting.Chess[,] move, int startIndex, int endIndex, ChessReseting.Chess[,] temp, int depth)
+    {
+        if (startIndex < endIndex)
+        {
+            int mid = (startIndex + endIndex) / 2;
+            Sort(move, startIndex, mid, temp, depth);
+            Sort(move, mid + 1, endIndex, temp, depth);
+            Merge(move, startIndex, mid, endIndex, temp, depth);
+        }
+    }
+
+    /// <summary>
+    /// 归并且排序的方法
+    /// </summary>
+    /// <param name="move"></param>
+    /// <param name="startIndex"></param>
+    /// <param name="mid"></param>
+    /// <param name="endIndex"></param>
+    /// <param name="tmep"></param>
+    /// <param name="depth"></param>
+    private void Merge(ChessReseting.Chess[,] move, int startIndex, int mid, int endIndex, ChessReseting.Chess[,] temp, int depth)
+    {
+        //左序列指针
+        int i = startIndex;
+        //右序列指针
+        int j = mid + 1;
+        //临时数组指针
+        int t = 0;
+        while (i <= mid && j <= endIndex)
+        {
+            //取两个着法中较大的历史得分对应的着法放入临时数组
+            if (GetHistoryScore(move[depth, i]) > GetHistoryScore(move[depth, j]))
+            {
+                temp[depth, t] = move[depth, i];
+                i++;
+            }
+            else
+            {
+                temp[depth, t] = move[depth, j];
+                j++;
+            }
+            t++;
+        }
+        //将左边剩余元素填进temp
+        while (i <= mid)
+        {
+            temp[depth, t] = move[depth, i];
+            i++;
+            t++;
+        }
+        //将右边剩余元素填进temp
+        while (j <= endIndex)
+        {
+            temp[depth, t++] = move[depth, j++];
+        }
+        t = 0;
+        //将temp元素拷贝到原数组中
+        while (startIndex<=endIndex)
+        {
+            move[depth, startIndex++] = temp[depth, t++];
+        }
+    }
+
+    #endregion
 
     /// <summary>
     /// 评估函数
@@ -433,13 +599,13 @@ public class SearchEngine
         #endregion
 
         #region 第四次扫描 计算红方与黑方的总得分，返回评估值
-        int redValue=0, blackValue=0;
+        int redValue = 0, blackValue = 0;
         for (int i = 0; i < 10; i++)
         {
             for (int j = 0; j < 9; j++)
             {
                 currentPosChessID = position[i, j];
-                if (currentPosChessID!=0)
+                if (currentPosChessID != 0)
                 {
                     if (gameManager.rules.isRed(currentPosChessID))
                     {
@@ -462,7 +628,7 @@ public class SearchEngine
             return blackValue - redValue;
         }
         #endregion
-      
+
     }
 
     /// <summary>

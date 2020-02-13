@@ -68,6 +68,7 @@ public class GameManager : MonoBehaviour
     {
         //测试
         chessPeople = 1;
+        currentLevel = 3;
         ResetGame();
 
     }
