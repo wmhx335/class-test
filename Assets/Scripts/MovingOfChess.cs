@@ -1086,9 +1086,9 @@ public class MovingOfChess
     {
         int chessID;
         moveCount = 0;
-        for (int i = 0; i < 10; i++)
+        for (int j = 0; j < 9; j++)
         {
-            for (int j = 0; j < 9; j++)
+            for (int i = 0; i < 10; i++)
             {
                 if (position[i,j]!=0)
                 {

@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public bool chessMove;//行动方，红true黑black
     public bool gameOver;//游戏结束
+    private bool hasLoad;//当前游戏是否已经加载
 
     /// <summary>
     /// 资源
@@ -62,16 +63,9 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        gameOver = true;
     }
 
-    void Start()
-    {
-        //测试
-        chessPeople = 1;
-        currentLevel = 3;
-        ResetGame();
-
-    }
 
     // Update is called once per frame
     void Update()
@@ -84,7 +78,13 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void ResetGame()
     {
+        gameOver = false;
         chessMove = true;
+        //防止二次加载游戏
+        if (hasLoad)
+        {
+            return;
+        }
         //初始化棋盘
         chessBoard = new int[10, 9]
         {
@@ -128,7 +128,8 @@ public class GameManager : MonoBehaviour
         }
         currentCanMoveUIStack = new Stack<GameObject>();
         searchEngine = new SearchEngine();
-
+        //已经加载过游戏了
+        hasLoad = true;
     }
 
 

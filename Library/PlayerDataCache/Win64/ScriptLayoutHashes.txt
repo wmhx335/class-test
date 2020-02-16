@@ -1,6 +1,6 @@
 Win64
 PlayerPath?
-D:/UNITY/象棋/成品1.0/Chess.exe
+D:/UNITY/象棋/成品2.0/Chess.exe
 SceneListBegin?
 Assets/Scenes/SampleScene.unity
 SceneListEnd?

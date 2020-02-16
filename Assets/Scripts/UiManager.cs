@@ -130,7 +130,8 @@ public class UiManager : MonoBehaviour
     /// </summary>
     public void ReturnToMain()
     {
-
+        panels[4].SetActive(false);
+        gameManager.Replay();
     }
 
     /// <summary>
@@ -138,8 +139,7 @@ public class UiManager : MonoBehaviour
     /// </summary>
     public void ShowTip(string str)
     {
-        //===测试
-        tipUIText = tipUITexts[0];
+        
         //==
         tipUIText.text = str;
     }

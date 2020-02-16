@@ -92,9 +92,16 @@ public class SearchEngine
             }
         }
         //调用具体搜索算法
+        //1、负极大值算法
         //NegaMax(searchDepth);
+        //2、AlphBeta剪枝算法
         //AlphBeta(searchDepth, -20000, 20000);
-        MergeSortAlphaBeta(searchDepth, -20000, 20000);
+        //3、归并排序历史启发优化剪枝算法
+        //MergeSortAlphaBeta(searchDepth, -20000, 20000);
+        //4、渴望算法
+        //AspirationSearch();
+        //5、极小窗口搜索
+        PrincipalVariation(searchDepth, -20000, 20000);
 
         GameObject item1 = gameManager.boardGrid[bestStep.from.x, bestStep.from.y];
         GameObject item2 = gameManager.boardGrid[bestStep.to.x, bestStep.to.y];
@@ -211,6 +218,134 @@ public class SearchEngine
     }
 
     /// <summary>
+    /// 渴望算法
+    /// </summary>
+    private void AspirationSearch()
+    {
+        int X;
+        int current;
+        searchDepth = gameManager.currentLevel - 1;
+        X = FalphaBeta(searchDepth, -20000, 20000);
+        searchDepth = gameManager.currentLevel;
+        current = FalphaBeta(searchDepth, X - 50, X + 50);
+        if (current < X - 50)
+        {
+            FalphaBeta(searchDepth, -20000, X-50);
+        }
+        if (current>X+50)
+        {
+            FalphaBeta(searchDepth,X+50,20000);
+        }
+    }
+
+    /// <summary>
+    /// 渴望搜索
+    /// </summary>
+    private int FalphaBeta(int depth, int alpha, int beta)
+    {
+        int score, count, willKillKing, chessID;
+        int current = -20000;
+        willKillKing = IsGameOver(unrealBoard, depth);
+        if (willKillKing != 0)
+        {
+            return willKillKing;
+        }
+
+        if (depth <= 0)
+        {
+            //当前搜索深度是奇数层吗？是返回true
+            return Eveluate(unrealBoard, (searchDepth - depth) % 2 != 0);
+        }
+        count = gameManager.movingOfChess.CreatePossibleMove(unrealBoard, depth, (searchDepth - depth) % 2 != 0);
+        for (int i = 0; i < count; i++)
+        {
+            chessID = MakeMove(gameManager.movingOfChess.moveList[depth, i]);
+            score = -FalphaBeta(depth - 1, -beta, -alpha);
+            UnMakeMove(gameManager.movingOfChess.moveList[depth, i], chessID);
+            if (score>current)
+            {
+                current = score;
+                if (score>=alpha)
+                {
+                    //更新边界值
+                    alpha = score;
+                    if (depth==searchDepth)
+                    {
+                        bestStep = gameManager.movingOfChess.moveList[depth, i];
+                    }
+                }
+                if (alpha>=beta)
+                {
+                    break;
+                }
+            }
+        }
+        //返回最大值
+        return current;
+    }
+
+    private int PrincipalVariation(int depth,int alpha,int beta)
+    {
+        int score, count, willKillKing, chessID;
+        int best;
+        willKillKing = IsGameOver(unrealBoard, depth);
+        if (willKillKing!=0)
+        {
+            return willKillKing;
+        }
+        if (depth<=0)
+        {
+            return Eveluate(unrealBoard,((searchDepth-depth)%2)!=0);
+        }
+        count = gameManager.movingOfChess.CreatePossibleMove(unrealBoard,depth, ((searchDepth - depth) % 2 )!= 0);
+        chessID = MakeMove(gameManager.movingOfChess.moveList[depth, 0]);
+        best = -PrincipalVariation(depth-1,-beta,-alpha);
+        UnMakeMove(gameManager.movingOfChess.moveList[depth,0],chessID);
+        if (depth==searchDepth)
+        {
+            bestStep = gameManager.movingOfChess.moveList[depth, 0];
+        }
+        for (int i = 0; i < count; i++)
+        {
+            //首先保证不能被剪枝，如果被裁剪掉，那么就不再考虑这个分支了
+            //只会更新下界,上界不更新
+            if (best<beta)
+            {
+                //如果当前得分大于alpha，则更新边界值，让区间更小
+                if (best>alpha)
+                {
+                    alpha = best;
+                }
+                chessID = MakeMove(gameManager.movingOfChess.moveList[depth,i]);
+                //进行极小窗口搜索评估
+                score = -PrincipalVariation(depth - 1, -alpha - 1, -alpha);
+                //如果搜索出来的得分比之前的下界更大，则说明存在更大值
+                //并且这个值是在范围内的，且这个值不一定是最大，那么重新评估，更新best
+                if (score>alpha&&score<beta)
+                {
+                    best = -PrincipalVariation(depth - 1, -beta, -score);
+                    if (depth==searchDepth)
+                    {
+                        bestStep = gameManager.movingOfChess.moveList[depth, i];
+                    }
+                }
+                //这个值本身就是一个更好的行动，更新最佳得分
+                else if(score>best)
+                {
+                    best = score;
+                    if (depth == searchDepth)
+                    {
+                        bestStep = gameManager.movingOfChess.moveList[depth, i];
+                    }
+                }
+                UnMakeMove(gameManager.movingOfChess.moveList[depth, i], chessID);
+            }
+        }
+        return best;
+    }
+
+    #region AlphBeta剪枝归并优化算法
+    /// <summary>
     /// 归并排序AlphBeta剪枝优化算法
     /// </summary>
     /// <param name="depth"></param>
@@ -298,7 +433,7 @@ public class SearchEngine
     private void MergeSort(ChessReseting.Chess[,] move, int count, int depth)
     {
         ChessReseting.Chess[,] temp = new ChessReseting.Chess[8, 80];
-        Sort(move,0,count,temp,depth);
+        Sort(move, 0, count, temp, depth);
     }
 
     /// <summary>
@@ -366,11 +501,12 @@ public class SearchEngine
         }
         t = 0;
         //将temp元素拷贝到原数组中
-        while (startIndex<=endIndex)
+        while (startIndex <= endIndex)
         {
             move[depth, startIndex++] = temp[depth, t++];
         }
     }
+    #endregion
 
     #endregion
 

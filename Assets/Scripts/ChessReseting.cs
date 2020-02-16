@@ -51,7 +51,95 @@ public class ChessReseting
         //pve悔棋两步
         if (gameManager.chessPeople==1)
         {
+            if (resetCount<=1)
+            {
+                return;
+            }
+            int f = resetCount - 1;
+            int s = resetCount - 2;
+            //获取黑棋来去的位置
+            int oneID = chessSteps[f].chessOneID;
+            int twoID = chessSteps[f].chessTwoID;
+            //获取红棋来去的位置
+            int threeID = chessSteps[s].chessOneID;
+            int fourID = chessSteps[s].chessTwoID;
+            //悔棋第一步 黑方
+            GameObject b_gridOne, b_gridTwo, b_chessOne, b_chessTwo;
+            b_gridOne = chessSteps[f].gridOne;
+            b_gridTwo = chessSteps[f].gridTwo;
+            b_chessOne = chessSteps[f].chessOne;
+            b_chessTwo = chessSteps[f].chessTwo;
+            //悔棋第二步 红方
+            GameObject r_gridOne, r_gridTwo, r_chessOne, r_chessTwo;
+            r_gridOne = chessSteps[s].gridOne;
+            r_gridTwo = chessSteps[s].gridTwo;
+            r_chessOne = chessSteps[s].chessOne;
+            r_chessTwo = chessSteps[s].chessTwo;
+            //黑方吃子
+            if (b_chessTwo!=null)
+            {
+                b_chessOne.transform.SetParent(b_gridOne.transform);
+                b_chessTwo.transform.SetParent(b_gridTwo.transform);
+                b_chessOne.transform.localPosition = Vector3.zero;
+                b_chessTwo.transform.localPosition = Vector3.zero;
+                gameManager.chessBoard[chessSteps[f].from.x, chessSteps[f].from.y] = oneID;
+                gameManager.chessBoard[chessSteps[f].to.x, chessSteps[f].to.y] = twoID;
 
+                //红方吃子
+                if (r_chessTwo!=null)
+                {
+                    r_chessOne.transform.SetParent(r_gridOne.transform);
+                    r_chessTwo.transform.SetParent(r_gridTwo.transform);
+                    r_chessOne.transform.localPosition = Vector3.zero;
+                    r_chessTwo.transform.localPosition = Vector3.zero;
+                    gameManager.chessBoard[chessSteps[s].from.x, chessSteps[s].from.y] = threeID;
+                    gameManager.chessBoard[chessSteps[s].to.x, chessSteps[s].to.y] = fourID;
+
+                }
+                //红方走子
+                else
+                {
+                    r_chessOne.transform.SetParent(r_gridOne.transform);
+                    r_chessOne.transform.localPosition = Vector3.zero;
+                    gameManager.chessBoard[chessSteps[s].from.x, chessSteps[s].from.y] = threeID;
+                    gameManager.chessBoard[chessSteps[s].to.x, chessSteps[s].to.y] = 0;
+                }
+            }
+            //黑方走子
+            else
+            {
+                b_chessOne.transform.SetParent(b_gridOne.transform);
+                b_chessOne.transform.localPosition = Vector3.zero;
+                gameManager.chessBoard[chessSteps[f].from.x, chessSteps[f].from.y] = oneID;
+                gameManager.chessBoard[chessSteps[f].to.x, chessSteps[f].to.y] = 0;
+
+                //红方吃子
+                if (r_chessTwo != null)
+                {
+                    r_chessOne.transform.SetParent(r_gridOne.transform);
+                    r_chessTwo.transform.SetParent(r_gridTwo.transform);
+                    r_chessOne.transform.localPosition = Vector3.zero;
+                    r_chessTwo.transform.localPosition = Vector3.zero;
+                    gameManager.chessBoard[chessSteps[s].from.x, chessSteps[s].from.y] = threeID;
+                    gameManager.chessBoard[chessSteps[s].to.x, chessSteps[s].to.y] = fourID;
+
+                }
+                //红方走子
+                else
+                {
+                    r_chessOne.transform.SetParent(r_gridOne.transform);
+                    r_chessOne.transform.localPosition = Vector3.zero;
+                    gameManager.chessBoard[chessSteps[s].from.x, chessSteps[s].from.y] = threeID;
+                    gameManager.chessBoard[chessSteps[s].to.x, chessSteps[s].to.y] = 0;
+                }
+            }
+            gameManager.chessMove = true;
+            resetCount -= 2;
+            gameManager.gameOver = false;
+            UiManager.Instance.ShowTip("红方走");
+            gameManager.checkmate.JudgeIfCheckmate();
+            chessSteps[f] = new Chess();
+            chessSteps[s] = new Chess();
         }
         //pvp悔棋一步
         else if(gameManager.chessPeople==2)
