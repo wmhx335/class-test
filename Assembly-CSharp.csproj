@@ -64,7 +64,9 @@
     <Compile Include="Assets\Scripts\Checkmate.cs" />
     <Compile Include="Assets\Scripts\ChessOrGrid.cs" />
     <Compile Include="Assets\Scripts\ChessReseting.cs" />
+    <Compile Include="Assets\Scripts\GameCilient.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
+    <Compile Include="Assets\Scripts\GameServer.cs" />
     <Compile Include="Assets\Scripts\MovingOfChess.cs" />
     <Compile Include="Assets\Scripts\Rules.cs" />
     <Compile Include="Assets\Scripts\SearchEngine.cs" />
