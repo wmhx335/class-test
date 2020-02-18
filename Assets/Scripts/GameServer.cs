@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Threading;
 using System.Net.Sockets;
 using System.Net;
+using System.Text;
 
 public class GameServer 
 {
@@ -54,6 +55,8 @@ public class GameServer
                     break;
                 }
                 //具体处理接受信息的数据
+                string msg = Encoding.UTF8.GetString(buffer,0,byteRead);
+                Debug.Log(msg);
             }
             catch (System.Exception ex)
             {
@@ -86,6 +89,17 @@ public class GameServer
         if (connectThread!=null)
         {
             connectThread.Abort();
+        }
+    }
+
+    /// <summary>
+    /// 发送信息
+    /// </summary>
+    private void SendMsg()
+    {
+        if (romoteClient!=null)
+        {
+            romoteClient.Client.Send(Encoding.UTF8.GetBytes("Hello Client,this is Server！"));
         }
     }
 }

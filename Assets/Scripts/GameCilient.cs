@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Net.Sockets;
 using System.Threading;
 using System.Net;
+using System.Text;
 /// <summary>
 /// 客户端
 /// </summary>
@@ -82,8 +83,9 @@ public class GameCilient
                         Debug.Log("与服务器连接中断");
                         break;
                     }
-                    //处理接收到的数据 todo
-
+                    //处理接收到的数据
+                    string msg = Encoding.UTF8.GetString(resultBuffer, 0, byteRead);
+                    Debug.Log(msg);
                 }
                 catch (System.Exception ex)
                 {
@@ -91,6 +93,17 @@ public class GameCilient
                     Close();
                 }
             } while (true);
+        }
+    }
+
+    /// <summary>
+    /// 发送信息
+    /// </summary>
+    private void SendMsg()
+    {
+        if (localClient != null)
+        {
+            localClient.Client.Send(Encoding.UTF8.GetBytes("Hello Server,this is Client！"));
         }
     }
 }
