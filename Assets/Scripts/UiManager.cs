@@ -18,8 +18,10 @@ public class UiManager : MonoBehaviour
     public Text tipUIText;//当前需要具体改变文本的显示UI
 
     public Text[] tipUITexts;//两个对应显示UI的引用
-
+    [HideInInspector]
     public GameManager gameManager;
+
+    public Button netModePlayButton;
     // Start is called before the first frame update
     void Start()
     {
@@ -51,6 +53,10 @@ public class UiManager : MonoBehaviour
     {
         panels[0].SetActive(false);
         panels[5].SetActive(true);
+        gameManager.PlayerConnected();
+        gameManager.chessPeople = 3;
+        tipUIText = tipUITexts[1];
+        CanClickStartButton(false);
     }
 
     public void ExitGame()
@@ -149,7 +155,7 @@ public class UiManager : MonoBehaviour
     /// </summary>
     public void StartNetWorkingMode()
     {
-
+        gameManager.BeReady();
     }
 
     /// <summary>
@@ -160,6 +166,20 @@ public class UiManager : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// 是否可以点击开始按钮
+    /// </summary>
+    public void CanClickStartButton(bool canClick)
+    {
+        if (canClick)
+        {
+            netModePlayButton.interactable = true;
+        }
+        else
+        {
+            netModePlayButton.interactable = false;
+        }
+    }
     #endregion
 
 

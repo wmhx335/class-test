@@ -96,6 +96,11 @@ public class ChessOrGrid : MonoBehaviour
                         gameManager.lastChessOrGrid = null;
                         return;
                     }
+                    if (gameManager.chessPeople==3&&!gameManager.isServer)
+                    {
+                        gameManager.lastChessOrGrid = null;
+                        return;
+                    }
                     FromX =gameManager.lastChessOrGrid.xIndex;
                     FromY =gameManager.lastChessOrGrid.yIndex;
                     //判断合法
@@ -114,6 +119,12 @@ public class ChessOrGrid : MonoBehaviour
                     gameManager.chessMove = false;
                     gameManager.lastChessOrGrid = this;
                     gameManager.HideClickUI();
+                    //联网模式 将当前着法做成消息序列并发送
+                    if (gameManager.chessPeople==3)
+                    {
+                        gameManager.gameServer.SendMsg(new int[6] { 0,1,FromX,FromY,ToX,ToY});
+                        return;
+                    }
                     if (gameManager.gameOver)
                     {
                         return;
@@ -139,6 +150,11 @@ public class ChessOrGrid : MonoBehaviour
                         gameManager.lastChessOrGrid = null;
                         return;
                     }
+                    if (gameManager.chessPeople == 3 && gameManager.isServer)
+                    {
+                        gameManager.lastChessOrGrid = null;
+                        return;
+                    }
                     FromX = gameManager.lastChessOrGrid.xIndex;
                     FromY = gameManager.lastChessOrGrid.yIndex;
                     bool canMove = gameManager.rules.IsValidMove(gameManager.chessBoard, FromX, FromY, ToX, ToY);
@@ -155,6 +171,11 @@ public class ChessOrGrid : MonoBehaviour
                     gameManager.chessMove = true;
                     gameManager.lastChessOrGrid = this;
                     gameManager.HideClickUI();
+                    //联网模式 将当前着法做成消息序列并发送
+                    if (gameManager.chessPeople == 3)
+                    {
+                        gameManager.gameCilient.SendMsg(new int[6] { 0, 0, FromX, FromY, ToX, ToY });
+                    }
                 }
                 break;
 
@@ -163,6 +184,11 @@ public class ChessOrGrid : MonoBehaviour
                 gameManager.ClearCurrentCanMoveUIStack();
                 if (!gameManager.chessMove)//黑色轮次
                 {
+                    if (gameManager.chessPeople==3&&gameManager.isServer)
+                    {
+                        gameManager.lastChessOrGrid = null;
+                        return;
+                    }
                     FromX = x;
                     FromY = y;
                     //显示所有可移动路径
@@ -173,7 +199,12 @@ public class ChessOrGrid : MonoBehaviour
                 else//红色轮次
                 {
                     //红吃黑
-                    if(gameManager.lastChessOrGrid==null)
+                    if (gameManager.chessPeople == 3 && !gameManager.isServer)
+                    {
+                        gameManager.lastChessOrGrid = null;
+                        return;
+                    }
+                    if (gameManager.lastChessOrGrid==null)
                     {
                         return;
                     }
@@ -200,6 +231,12 @@ public class ChessOrGrid : MonoBehaviour
                     gameManager.lastChessOrGrid = null;
                     gameManager.checkmate.JudgeIfCheckmate();
                     gameManager.HideClickUI();
+                    //联网模式 将当前着法做成消息序列并发送
+                    if (gameManager.chessPeople == 3)
+                    {
+                        gameManager.gameServer.SendMsg(new int[6] { 0, 1, FromX, FromY, ToX, ToY });
+                        return;
+                    }
                     if (gameManager.gameOver)
                     {
                         return;
@@ -221,6 +258,11 @@ public class ChessOrGrid : MonoBehaviour
                 gameManager.ClearCurrentCanMoveUIStack();
                 if (gameManager.chessMove)//红色轮次
                 {
+                    if (gameManager.chessPeople == 3 && !gameManager.isServer)
+                    {
+                        gameManager.lastChessOrGrid = null;
+                        return;
+                    }
                     FromX = x;
                     FromY = y;
 
@@ -231,6 +273,11 @@ public class ChessOrGrid : MonoBehaviour
                 else//黑色轮次
                 {
                     //黑吃红
+                    if (gameManager.chessPeople == 3 && gameManager.isServer)
+                    {
+                        gameManager.lastChessOrGrid = null;
+                        return;
+                    }
                     if (gameManager.lastChessOrGrid == null)
                     {
                         return;
@@ -258,6 +305,11 @@ public class ChessOrGrid : MonoBehaviour
                     gameManager.lastChessOrGrid = null;
                     gameManager.checkmate.JudgeIfCheckmate();
                     gameManager.HideClickUI();
+                    //联网模式 将当前着法做成消息序列并发送
+                    if (gameManager.chessPeople == 3)
+                    {
+                        gameManager.gameCilient.SendMsg(new int[6] { 0, 0, FromX, FromY, ToX, ToY });
+                    }
                 }
                 break;
 

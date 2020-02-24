@@ -47,7 +47,6 @@ public class GameCilient
         try
         {
             localClient.Connect(IPAddress.Parse(serverAddress),port);
-
             receiveThread = new Thread(SocketReceiver);
             receiveThread.Start();
             Debug.Log("客户端启动");
@@ -60,6 +59,7 @@ public class GameCilient
                 return false;
             }
         }
+        SendMsg(new int[] { 3, 0, 0, 0, 0, 0 });
         return true;
     }
 
@@ -84,8 +84,15 @@ public class GameCilient
                         break;
                     }
                     //处理接收到的数据
-                    string msg = Encoding.UTF8.GetString(resultBuffer, 0, byteRead);
-                    Debug.Log(msg);
+                    int[] result = BytesToInt(resultBuffer,0);
+                    for (int i = 0; i < 6; i++)
+                    {
+                        GameManager.Instance.gameCodeReceive[i] = result[i];
+                    }
+                    GameManager.Instance.receiveNewCode = true;
+
+                    //string msg = Encoding.UTF8.GetString(resultBuffer, 0, byteRead);
+                    //Debug.Log(msg);
                 }
                 catch (System.Exception ex)
                 {
@@ -97,13 +104,53 @@ public class GameCilient
     }
 
     /// <summary>
+    /// int 转byte
+    /// </summary>
+    /// <param name="src"></param>
+    /// <param name="offset"></param>
+    /// <returns></returns>
+    private byte[] IntToBytes(int[] src, int offset)
+    {
+        byte[] values = new byte[src.Length * 4];
+        for (int i = 0; i < src.Length; i++)
+        {
+            values[offset] = (byte)src[i];
+            // >> 右移XX位
+            values[offset] = (byte)(src[i] >> 8);
+            values[offset + 2] = (byte)(src[i] >> 16);
+            values[offset + 3] = (byte)(src[i] >> 24);
+            offset += 4;
+        }
+        return values;
+    }
+
+    /// <summary>
+    /// byte数组转int数组
+    /// </summary>
+    /// <returns></returns>
+    private int[] BytesToInt(byte[] src, int offset)
+    {
+        int[] values = new int[src.Length / 4];
+        for (int i = 0; i < src.Length / 4; i++)
+        {
+            int value = (int)(src[offset] & 0xFF)
+            | (int)(src[offset + 1] & 0xFF << 8)
+            | (int)(src[offset + 2] & 0xFF << 16)
+            | (int)(src[offset + 3] & 0xFF << 24);
+            values[i] = value;
+            offset += 4;
+        }
+        return values;
+    }
+
+    /// <summary>
     /// 发送信息
     /// </summary>
-    private void SendMsg()
+    public void SendMsg(int []gameCode)
     {
         if (localClient != null)
         {
-            localClient.Client.Send(Encoding.UTF8.GetBytes("Hello Server,this is Client！"));
+            localClient.Client.Send(IntToBytes(gameCode,0));
         }
     }
 }

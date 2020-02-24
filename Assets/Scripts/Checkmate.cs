@@ -23,6 +23,11 @@ public class Checkmate
         if (gameManager.chessBoard[jiangX,jiangY]!=1)
         {
             uiManager.ShowTip("红方胜利");
+            if (gameManager.chessPeople==3)
+            {
+                gameManager.gameCodeReceive[0] = 1;
+                UiManager.Instance.CanClickStartButton(true);
+            }
             gameManager.gameOver = true;
             return;
         }
@@ -30,6 +35,11 @@ public class Checkmate
         else if (gameManager.chessBoard[shuaiX,shuaiY]!=8)
         {
             uiManager.ShowTip("黑方胜利");
+            if (gameManager.chessPeople == 3)
+            {
+                gameManager.gameCodeReceive[0] = 1;
+                UiManager.Instance.CanClickStartButton(true);
+            }
             gameManager.gameOver = true;
             return;
         }

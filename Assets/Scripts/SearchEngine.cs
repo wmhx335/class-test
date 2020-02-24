@@ -103,6 +103,13 @@ public class SearchEngine
         //5、极小窗口搜索
         PrincipalVariation(searchDepth, -20000, 20000);
 
+        HandleBestStep(position);
+
+        return bestStep;
+    }
+
+    private void HandleBestStep(int[,] position)
+    {
         GameObject item1 = gameManager.boardGrid[bestStep.from.x, bestStep.from.y];
         GameObject item2 = gameManager.boardGrid[bestStep.to.x, bestStep.to.y];
         bestStep.gridOne = item1;
@@ -118,9 +125,8 @@ public class SearchEngine
             GameObject secondChess = item2.transform.GetChild(0).gameObject;
             bestStep.chessTwo = secondChess;
         }
-
-        return bestStep;
     }
+
     #region 搜索算法
     /// <summary>
     /// 负极大值算法

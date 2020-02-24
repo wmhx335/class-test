@@ -58,19 +58,40 @@ public class GameManager : MonoBehaviour
     public GameObject canEatPosUIGo;//可以吃掉的棋子UI显示
     private Stack<GameObject> canMoveUIStack;//移动位置UI显示游戏物体的对象池
     private Stack<GameObject> currentCanMoveUIStack;//当前移动位置UI已经显示的游戏物体栈；
-    
+
+    /// <summary>
+    /// 联网
+    /// </summary>
+    //客户端
+    public GameCilient gameCilient;
+    //服务器
+    public GameServer gameServer;
+    //当前运行程序是否为服务器端程序
+    public bool isServer;
+    //消息序列
+    public int[] gameCodeReceive;
+    //双方准备开关
+    private bool redHasReady;
+    private bool blackHasReady;
+    //收到新消息的开关
+    public bool receiveNewCode;
 
     private void Awake()
     {
         Instance = this;
         gameOver = true;
+        gameCodeReceive = new int[6];
     }
 
 
     // Update is called once per frame
     void Update()
     {
-
+        if (receiveNewCode)
+        {
+            receiveNewCode = false;
+            ParseGameCode();
+        }
     }
 
     /// <summary>
@@ -92,7 +113,7 @@ public class GameManager : MonoBehaviour
             {0,0,0,0,0,0,0,0,0},
             {0,4,0,0,0,0,0,4,0},
             {7,0,7,0,7,0,7,0,7},
-            {0,0,0,0,0,0,0,0,0}, 
+            {0,0,0,0,0,0,0,0,0},
             {0,0,0,0,0,0,0,0,0},
             {14,0,14,0,14,0,14,0,14},
             {0,11,0,0,0,0,0,11,0},
@@ -100,7 +121,7 @@ public class GameManager : MonoBehaviour
             {9,10,13,12,8,12,13,10,9}
         };
         boardGrid = new GameObject[10, 9];
-        if (chessPeople == 1|| chessPeople == 2)
+        if (chessPeople == 1 || chessPeople == 2)
         {
             boardGo = boardGos[0];
         }
@@ -122,7 +143,7 @@ public class GameManager : MonoBehaviour
         chessReseting.chessSteps = new ChessReseting.Chess[400];
         //移动UI显示的栈
         canMoveUIStack = new Stack<GameObject>();
-        for (int i=0;i<40;i++)
+        for (int i = 0; i < 40; i++)
         {
             canMoveUIStack.Push(Instantiate(canMovePosUIGo));
         }
@@ -164,13 +185,13 @@ public class GameManager : MonoBehaviour
     {
         for (int i = 0; i < 10; i++)
         {
-            for (int j=0;j<9;j++)
+            for (int j = 0; j < 9; j++)
             {
                 GameObject item = boardGrid[i, j];
-                switch(chessBoard[i,j])
+                switch (chessBoard[i, j])
                 {
                     case 1:
-                        CreateChess(item, "b_jiang",sprites[0], false);
+                        CreateChess(item, "b_jiang", sprites[0], false);
                         break;
                     case 2:
                         CreateChess(item, "b_ju", sprites[1], false);
@@ -225,7 +246,7 @@ public class GameManager : MonoBehaviour
     /// <param name="name">棋子名称</param>
     /// <param name="chessIcon">棋子标志样式</param>
     /// <param name="ifRed">是否为红色方</param>
-    private void CreateChess(GameObject gridItem,string name,Sprite chessIcon,bool ifRed)
+    private void CreateChess(GameObject gridItem, string name, Sprite chessIcon, bool ifRed)
     {
         GameObject item = Instantiate(chessGo);
         item.transform.SetParent(gridItem.transform);
@@ -302,10 +323,10 @@ public class GameManager : MonoBehaviour
     }
     public void ClearCurrentCanMoveUIStack()
     {
-        while (currentCanMoveUIStack.Count>0)
+        while (currentCanMoveUIStack.Count > 0)
         {
             PushCanMoveUI(currentCanMoveUIStack.Pop());
-            
+
         }
     }
 
@@ -322,9 +343,176 @@ public class GameManager : MonoBehaviour
         ClearCurrentCanMoveUIStack();
         lastChessOrGrid = null;
         UiManager.Instance.ShowTip("红方走");
-        for (int i=chessReseting.resetCount;i>0;i--)
+        for (int i = chessReseting.resetCount; i > 0; i--)
         {
             chessReseting.ResetChess();
         }
     }
+
+    #region 联网相关方法
+    /// <summary>
+    /// 联网方法
+    /// </summary>
+    public void PlayerConnected()
+    {
+        gameCilient = new GameCilient("127.0.0.1", 8888);
+        //判断客户端启动是否成功
+        if (!gameCilient.Start())
+        {
+            //不成功则没有服务器，需要把当前运行程序作为服务器
+            gameCilient.Close();
+            gameCilient = null;
+            gameServer = new GameServer("127.0.0.1", 8888);
+            gameServer.Start();
+            isServer = true;
+        }
+        else
+        {
+            isServer = false;
+        }
+    }
+
+    /// <summary>
+    /// 双方玩家的准备方法
+    /// </summary>
+    public void BeReady()
+    {
+        if (isServer)
+        {
+            //服务器红方
+            gameServer.SendMsg(new int[6] { 2, 1, 0, 0, 0, 0 });
+            redHasReady = true;
+        }
+        else
+        {
+            //客户端黑方
+            gameCilient.SendMsg(new int[6] { 2, 1, 0, 0, 0, 0 });
+            blackHasReady = true;
+        }
+        StartGame();
+ 
+    }
+
+    /// <summary>
+    /// 双方都准备好，开始游戏
+    /// </summary>
+    private void StartGame()
+    {
+        if (redHasReady && blackHasReady)
+        {
+            redHasReady = blackHasReady = false;
+            UiManager.Instance.CanClickStartButton(false);
+            ResetGame();
+        }
+    }
+
+    /// <summary>
+    /// 认输
+    /// </summary>
+    public void GiveUp()
+    {
+        gameOver = true;
+        if (isServer)
+        {
+            gameServer.SendMsg(new int[6] { 1, 1, 0, 0, 0, 0 });
+        }
+        else
+        {
+            gameServer.SendMsg(new int[6] { 1, 0, 0, 0, 0, 0 });
+        }
+        UiManager.Instance.CanClickStartButton(true);
+    }
+    /// <summary>
+    /// 解析游戏编码为当前着法
+    /// </summary>
+    /// <param name="fromX"></param>
+    /// <param name="fromY"></param>
+    /// <param name="toX"></param>
+    /// <param name="toY"></param>
+    /// <returns></returns>
+    private ChessReseting.Chess CodeToStep(int fromX,int fromY,int toX,int toY)
+    {
+        ChessReseting.Chess chessStep = new ChessReseting.Chess();
+        GameObject gridOne = boardGrid[fromX, fromY];
+        GameObject gridTwo = boardGrid[toX, toY];
+        chessStep.gridOne = gridOne;
+        chessStep.gridTwo = gridTwo;
+        GameObject firstChess = gridOne.transform.GetChild(0).gameObject;
+        chessStep.chessOne = firstChess;
+        chessStep.chessOneID = chessBoard[fromX, fromY];
+        chessStep.chessTwoID = chessBoard[toX, toY];
+        //吃子
+        if (gridTwo.transform.childCount!=0)
+        {
+            GameObject secondChess = gridTwo.transform.GetChild(0).gameObject;
+            chessStep.chessTwo = secondChess;
+        }
+        return chessStep;
+    } 
+
+    /// <summary>
+    /// 解析接收到的游戏编码
+    /// </summary>
+    public void ParseGameCode()
+    {
+        //当前游戏开始且未结束时，需要走棋
+        if (!gameOver)
+        {
+            //根据信息解析为来去位置走棋
+            movingOfChess.HaveGoodMove(CodeToStep(gameCodeReceive[2],
+                gameCodeReceive[3], gameCodeReceive[4], gameCodeReceive[5]));
+            //限制一方不能走棋
+            chessMove = !chessMove;
+            if (chessMove)
+            {
+                UiManager.Instance.ShowTip("红方走");
+            }
+            else
+            {
+                UiManager.Instance.ShowTip("黑方走");
+            }
+        }
+        int gameState = gameCodeReceive[0];
+        switch (gameState)
+        {
+            case 0:
+                gameOver = false;
+                break;
+            case 1:
+                gameOver = true;
+                chessMove = !chessMove;
+                //黑方
+                if (gameCodeReceive[1]==0)
+                {
+                    UiManager.Instance.ShowTip("红方胜利");
+                }
+                else if(gameCodeReceive[1] == 1)
+                {
+                    UiManager.Instance.ShowTip("黑方胜利");
+                }
+                UiManager.Instance.CanClickStartButton(true);
+                break;
+            case 2:
+                if (isServer)
+                {
+                    blackHasReady = true;
+                    StartGame();
+                }
+                else
+                {
+                    redHasReady = true;
+                    StartGame();
+                }
+                break;
+            case 3:
+                UiManager.Instance.CanClickStartButton(true);
+                break;
+            default:
+                break;
+        }
+
+    }
+
+
+    #endregion
 }
