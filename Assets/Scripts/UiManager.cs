@@ -138,6 +138,7 @@ public class UiManager : MonoBehaviour
     {
         panels[4].SetActive(false);
         gameManager.Replay();
+        gameManager.gameOver = true;
     }
 
     /// <summary>
@@ -146,7 +147,6 @@ public class UiManager : MonoBehaviour
     public void ShowTip(string str)
     {
         
-        //==
         tipUIText.text = str;
     }
 

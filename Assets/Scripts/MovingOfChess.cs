@@ -32,6 +32,7 @@ public class MovingOfChess
     /// <param name="y2"></param>
     public void IsMove(GameObject chessGo, GameObject targetGrid, int x1, int y1, int x2, int y2)
     {
+        AudioSourceManager.Instance.PlaySound(1);
         gameManager.ShowLastPositionUI(chessGo.transform.position);
         chessGo.transform.SetParent(targetGrid.transform);
         chessGo.transform.localPosition = Vector3.zero;
@@ -50,6 +51,7 @@ public class MovingOfChess
     /// <param name="y2"></param>
     public void IsEat(GameObject firstChess, GameObject secondChess, int x1, int y1, int x2, int y2)
     {
+        AudioSourceManager.Instance.PlaySound(2);
         gameManager.ShowLastPositionUI(firstChess.transform.position);
         GameObject secondChessGrid = secondChess.transform.parent.gameObject;//得到被吃棋子的父对象
         firstChess.transform.SetParent(secondChessGrid.transform);

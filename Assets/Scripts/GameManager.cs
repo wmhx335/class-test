@@ -168,7 +168,11 @@ public class GameManager : MonoBehaviour
         searchEngine = new SearchEngine();
         //已经加载过游戏了
         hasLoad = true;
-        netModeHasLoad = true;
+        if (chessPeople==3)
+        {
+            netModeHasLoad = true;
+        }
+
     }
 
 
@@ -408,7 +412,10 @@ public class GameManager : MonoBehaviour
             blackHasReady = true;
         }
         StartGame();
- 
+        if (netModeHasLoad)
+        {
+            Replay();
+        }
     }
 
     /// <summary>
@@ -531,6 +538,17 @@ public class GameManager : MonoBehaviour
 
     }
 
+    private void OnDestroy()
+    {
+        if (gameServer!=null)
+        {
+            gameServer.Close();
+        }
+        if (gameCilient!=null)
+        {
+            gameCilient.Close();
+        }
+    }
 
     #endregion
 }

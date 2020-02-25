@@ -23,6 +23,7 @@ public class Checkmate
         if (gameManager.chessBoard[jiangX,jiangY]!=1)
         {
             uiManager.ShowTip("红方胜利");
+            AudioSourceManager.Instance.PlaySound(6);
             if (gameManager.chessPeople==3)
             {
                 gameManager.gameCodeReceive[0] = 1;
@@ -35,6 +36,26 @@ public class Checkmate
         else if (gameManager.chessBoard[shuaiX,shuaiY]!=8)
         {
             uiManager.ShowTip("黑方胜利");
+            if (gameManager.chessPeople==1)
+            {
+                AudioSourceManager.Instance.PlaySound(7);
+            }
+            else if(gameManager.chessPeople==2)
+            {
+                AudioSourceManager.Instance.PlaySound(6);
+            }
+            else
+            {
+                if (gameManager.isServer)
+                {
+                    AudioSourceManager.Instance.PlaySound(7);
+                }
+                else
+                {
+                    AudioSourceManager.Instance.PlaySound(6);
+                }
+            }
+
             if (gameManager.chessPeople == 3)
             {
                 gameManager.gameCodeReceive[0] = 1;
@@ -56,6 +77,7 @@ public class Checkmate
                         ifCheckmate = gameManager.rules.IsValidMove(gameManager.chessBoard,i,j,shuaiX,shuaiY);
                         if (ifCheckmate)
                         {
+                            AudioSourceManager.Instance.PlaySound(4);
                             uiManager.ShowTip("帅被車将军");
                         }
                         break;
@@ -63,6 +85,7 @@ public class Checkmate
                         ifCheckmate = gameManager.rules.IsValidMove(gameManager.chessBoard, i, j, shuaiX, shuaiY);
                         if (ifCheckmate)
                         {
+                            AudioSourceManager.Instance.PlaySound(4);
                             uiManager.ShowTip("帅被马将军");
                         }
                         break;
@@ -70,6 +93,7 @@ public class Checkmate
                         ifCheckmate = gameManager.rules.IsValidMove(gameManager.chessBoard, i, j, shuaiX, shuaiY);
                         if (ifCheckmate)
                         {
+                            AudioSourceManager.Instance.PlaySound(4);
                             uiManager.ShowTip("帅被炮将军");
                         }
                         break;
@@ -77,6 +101,7 @@ public class Checkmate
                         ifCheckmate = gameManager.rules.IsValidMove(gameManager.chessBoard, i, j, shuaiX, shuaiY);
                         if (ifCheckmate)
                         {
+                            AudioSourceManager.Instance.PlaySound(4);
                             uiManager.ShowTip("帅被卒将军");
                         }
                         break;
@@ -84,6 +109,7 @@ public class Checkmate
                         ifCheckmate = gameManager.rules.IsValidMove(gameManager.chessBoard, i, j, jiangX, jiangY);
                         if (ifCheckmate)
                         {
+                            AudioSourceManager.Instance.PlaySound(4);
                             uiManager.ShowTip("将被車将军");
                         }
                         break;
@@ -91,6 +117,7 @@ public class Checkmate
                         ifCheckmate = gameManager.rules.IsValidMove(gameManager.chessBoard, i, j, jiangX, jiangY);
                         if (ifCheckmate)
                         {
+                            AudioSourceManager.Instance.PlaySound(4);
                             uiManager.ShowTip("将被马将军");
                         }
                         break;
@@ -98,6 +125,7 @@ public class Checkmate
                         ifCheckmate = gameManager.rules.IsValidMove(gameManager.chessBoard, i, j, jiangX, jiangY);
                         if (ifCheckmate)
                         {
+                            AudioSourceManager.Instance.PlaySound(4);
                             uiManager.ShowTip("将被炮将军");
                         }
                         break;
@@ -105,6 +133,7 @@ public class Checkmate
                         ifCheckmate = gameManager.rules.IsValidMove(gameManager.chessBoard, i, j, jiangX, jiangY);
                         if (ifCheckmate)
                         {
+                            AudioSourceManager.Instance.PlaySound(4);
                             uiManager.ShowTip("将被兵将军");
                         }
                         break;

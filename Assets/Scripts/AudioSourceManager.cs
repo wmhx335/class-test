@@ -43,5 +43,6 @@ public class AudioSourceManager : MonoBehaviour
     {
         audioSource.Stop();
         audioSource.clip = audioBGClips[soundIndex];
+        audioSource.Play();
     }
 }

@@ -142,7 +142,7 @@ public class ChessReseting
             chessSteps[s] = new Chess();
         }
         //pvp悔棋一步
-        else if(gameManager.chessPeople==2)
+        else if(gameManager.chessPeople==2||gameManager.chessPeople==3)
         {
             if (resetCount <= 0)
             {
