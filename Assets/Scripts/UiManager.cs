@@ -163,7 +163,7 @@ public class UiManager : MonoBehaviour
     /// </summary>
     public void GiveUp()
     {
-
+        gameManager.GiveUp();
     }
 
     /// <summary>

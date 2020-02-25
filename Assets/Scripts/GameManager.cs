@@ -75,6 +75,8 @@ public class GameManager : MonoBehaviour
     private bool blackHasReady;
     //收到新消息的开关
     public bool receiveNewCode;
+    //当前棋盘是否加载的开关
+    private bool netModeHasLoad;
 
     private void Awake()
     {
@@ -101,6 +103,21 @@ public class GameManager : MonoBehaviour
     {
         gameOver = false;
         chessMove = true;
+        if (chessPeople==3)
+        {
+            if (netModeHasLoad)
+            {
+                return;
+            }
+        }
+        else
+        {
+            if (hasLoad)
+            {
+                return;
+            }
+        }
+
         //防止二次加载游戏
         if (hasLoad)
         {
@@ -151,6 +168,7 @@ public class GameManager : MonoBehaviour
         searchEngine = new SearchEngine();
         //已经加载过游戏了
         hasLoad = true;
+        netModeHasLoad = true;
     }
 
 

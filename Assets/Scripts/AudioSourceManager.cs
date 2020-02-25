@@ -10,6 +10,10 @@ using UnityEngine;
 public class AudioSourceManager : MonoBehaviour
 {
     public static AudioSourceManager Instance { get; private set; }
+    public AudioSource audioSource;
+    public AudioClip[] audioclips;//特效音
+    public AudioClip[] audioBGClips;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -19,6 +23,25 @@ public class AudioSourceManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
+    }
+
+    /// <summary>
+    /// 播放特效音
+    /// </summary>
+    /// <param name="soundIndex"></param>
+    public void PlaySound(int soundIndex)
+    {
+        audioSource.PlayOneShot(audioclips[soundIndex]);
+    }
+
+    /// <summary>
+    /// 切换背景音乐
+    /// </summary>
+    /// <param name="soundIndex"></param>
+    public void ChangeBGM(int soundIndex)
+    {
+        audioSource.Stop();
+        audioSource.clip = audioBGClips[soundIndex];
     }
 }
