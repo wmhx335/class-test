@@ -114,30 +114,18 @@ public class Rules
                 }
                 break;
             case 5://黑士
-                if (ToX > 2 || ToY > 5 || ToY < 3)//出九宫格
-                {
-                    return false;
-                }
                 if (Mathf.Abs(FromX - ToX) != 1 || Mathf.Abs(FromY - ToY) != 1)//走斜线
                 {
                     return false;
                 }
                 break;
             case 12://红仕
-                if (ToX < 7 || ToY > 5 || ToY < 3)//出九宫格
-                {
-                    return false;
-                }
                 if (Mathf.Abs(FromX - ToX) != 1 || Mathf.Abs(FromY - ToY) != 1)
                 {
                     return false;
                 }
                 break;
             case 6://黑象
-                if (ToX > 4)//过河
-                {
-                    return false;
-                }
                 if (Mathf.Abs(FromX - ToX) != 2 || Mathf.Abs(FromY - ToY) != 2)//走田字
                 {
                     return false;
@@ -149,10 +137,6 @@ public class Rules
                 }
                 break;
             case 13://红相
-                if (ToX < 5)//过河
-                {
-                    return false;
-                }
                 if (Mathf.Abs(FromX - ToX) != 2 || Mathf.Abs(FromY - ToY) != 2)//走田字
                 {
                     return false;

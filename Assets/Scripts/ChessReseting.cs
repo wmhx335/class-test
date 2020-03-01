@@ -136,7 +136,7 @@ public class ChessReseting
             gameManager.chessMove = true;
             resetCount -= 2;
             gameManager.gameOver = false;
-            UiManager.Instance.ShowTip("红方走");
+            UiManager.Instance.ShowTip("赤の番");
             gameManager.checkmate.JudgeIfCheckmate();
             chessSteps[f] = new Chess();
             chessSteps[s] = new Chess();
@@ -178,12 +178,12 @@ public class ChessReseting
             //黑色轮次，红色悔棋
             if (gameManager.chessMove==false)
             {
-                UiManager.Instance.ShowTip("红方走");
+                UiManager.Instance.ShowTip("赤の番");
             }
             //红色轮次，黑色悔棋
             else
             {
-                UiManager.Instance.ShowTip("黑方走");
+                UiManager.Instance.ShowTip("黒の番");
             }
             resetCount -= 1;
             chessSteps[f] = new Chess();

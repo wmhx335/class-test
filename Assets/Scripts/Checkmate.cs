@@ -22,7 +22,7 @@ public class Checkmate
         //将不存在
         if (gameManager.chessBoard[jiangX,jiangY]!=1)
         {
-            uiManager.ShowTip("红方胜利");
+            uiManager.ShowTip("赤の勝利");
             AudioSourceManager.Instance.PlaySound(6);
             if (gameManager.chessPeople==3)
             {
@@ -35,7 +35,7 @@ public class Checkmate
         //帅不存在
         else if (gameManager.chessBoard[shuaiX,shuaiY]!=8)
         {
-            uiManager.ShowTip("黑方胜利");
+            uiManager.ShowTip("黒の勝利");
             if (gameManager.chessPeople==1)
             {
                 AudioSourceManager.Instance.PlaySound(7);
@@ -78,7 +78,7 @@ public class Checkmate
                         if (ifCheckmate)
                         {
                             AudioSourceManager.Instance.PlaySound(4);
-                            uiManager.ShowTip("帅被車将军");
+                            uiManager.ShowTip("王手");
                         }
                         break;
                     case 3:
@@ -86,7 +86,7 @@ public class Checkmate
                         if (ifCheckmate)
                         {
                             AudioSourceManager.Instance.PlaySound(4);
-                            uiManager.ShowTip("帅被马将军");
+                            uiManager.ShowTip("王手");
                         }
                         break;
                     case 4:
@@ -94,7 +94,7 @@ public class Checkmate
                         if (ifCheckmate)
                         {
                             AudioSourceManager.Instance.PlaySound(4);
-                            uiManager.ShowTip("帅被炮将军");
+                            uiManager.ShowTip("王手");
                         }
                         break;
                     case 7:
@@ -102,7 +102,7 @@ public class Checkmate
                         if (ifCheckmate)
                         {
                             AudioSourceManager.Instance.PlaySound(4);
-                            uiManager.ShowTip("帅被卒将军");
+                            uiManager.ShowTip("王手");
                         }
                         break;
                     case 9:
@@ -110,7 +110,7 @@ public class Checkmate
                         if (ifCheckmate)
                         {
                             AudioSourceManager.Instance.PlaySound(4);
-                            uiManager.ShowTip("将被車将军");
+                            uiManager.ShowTip("王手");
                         }
                         break;
                     case 10:
@@ -118,7 +118,7 @@ public class Checkmate
                         if (ifCheckmate)
                         {
                             AudioSourceManager.Instance.PlaySound(4);
-                            uiManager.ShowTip("将被马将军");
+                            uiManager.ShowTip("王手");
                         }
                         break;
                     case 11:
@@ -126,7 +126,7 @@ public class Checkmate
                         if (ifCheckmate)
                         {
                             AudioSourceManager.Instance.PlaySound(4);
-                            uiManager.ShowTip("将被炮将军");
+                            uiManager.ShowTip("王手");
                         }
                         break;
                     case 14:
@@ -134,7 +134,7 @@ public class Checkmate
                         if (ifCheckmate)
                         {
                             AudioSourceManager.Instance.PlaySound(4);
-                            uiManager.ShowTip("将被兵将军");
+                            uiManager.ShowTip("王手");
                         }
                         break;
                     default:

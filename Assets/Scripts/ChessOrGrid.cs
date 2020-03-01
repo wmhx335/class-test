@@ -114,7 +114,7 @@ public class ChessOrGrid : MonoBehaviour
                     int chessTwoID = gameManager.chessBoard[ToX, ToY];
                     gameManager.chessReseting.AddChess(gameManager.chessReseting.resetCount,FromX,FromY,ToX,ToY,chessOneID,chessTwoID);
                     gameManager.movingOfChess.IsMove(gameManager.lastChessOrGrid.gameObject,gridGo,FromX,FromY,ToX,ToY);
-                    UiManager.Instance.ShowTip("黑方走");
+                    UiManager.Instance.ShowTip("黒の番");
                     gameManager.checkmate.JudgeIfCheckmate();
                     gameManager.chessMove = false;
                     gameManager.lastChessOrGrid = this;
@@ -166,7 +166,7 @@ public class ChessOrGrid : MonoBehaviour
                     int chessTwoID = gameManager.chessBoard[ToX, ToY];
                     gameManager.chessReseting.AddChess(gameManager.chessReseting.resetCount, FromX, FromY, ToX, ToY, chessOneID, chessTwoID);
                     gameManager.movingOfChess.IsMove(gameManager.lastChessOrGrid.gameObject, gridGo, FromX, FromY, ToX, ToY);
-                    UiManager.Instance.ShowTip("红方走");
+                    UiManager.Instance.ShowTip("赤の番");
                     gameManager.checkmate.JudgeIfCheckmate();
                     gameManager.chessMove = true;
                     gameManager.lastChessOrGrid = this;
@@ -227,7 +227,7 @@ public class ChessOrGrid : MonoBehaviour
                     gameManager.chessReseting.AddChess(gameManager.chessReseting.resetCount, FromX, FromY, ToX, ToY, chessOneID, chessTwoID);
                     gameManager.movingOfChess.IsEat(gameManager.lastChessOrGrid.gameObject,gameObject,FromX, FromY, ToX, ToY);
                     gameManager.chessMove = false;
-                    UiManager.Instance.ShowTip("黑方走");
+                    UiManager.Instance.ShowTip("黒の番");
                     gameManager.lastChessOrGrid = null;
                     gameManager.checkmate.JudgeIfCheckmate();
                     gameManager.HideClickUI();
@@ -301,7 +301,7 @@ public class ChessOrGrid : MonoBehaviour
                     gameManager.chessReseting.AddChess(gameManager.chessReseting.resetCount, FromX, FromY, ToX, ToY, chessOneID, chessTwoID);
                     gameManager.movingOfChess.IsEat(gameManager.lastChessOrGrid.gameObject, gameObject, FromX, FromY, ToX, ToY);
                     gameManager.chessMove = true;
-                    UiManager.Instance.ShowTip("红方走");
+                    UiManager.Instance.ShowTip("赤の番");
                     gameManager.lastChessOrGrid = null;
                     gameManager.checkmate.JudgeIfCheckmate();
                     gameManager.HideClickUI();
@@ -338,7 +338,7 @@ public class ChessOrGrid : MonoBehaviour
         gameManager.movingOfChess.HaveGoodMove(
         gameManager.searchEngine.SearchGoodMove(gameManager.chessBoard));
         gameManager.chessMove = true;
-        UiManager.Instance.ShowTip("红方走");
+        UiManager.Instance.ShowTip("赤の番");
         gameManager.checkmate.JudgeIfCheckmate();
     }
 }

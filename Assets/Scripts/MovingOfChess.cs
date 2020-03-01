@@ -445,9 +445,9 @@ public class MovingOfChess
 
     private void GetB_ShiMove(int[,] position, int FromX, int FromY)
     {
-        for (int x = 0; x < 3; x++)
+        for (int x = 0; x < 5; x++)
         {
-            for (int y = 3; y < 6; y++)
+            for (int y = 0; y < 9; y++)
             {
                 if (gameManager.rules.IsValidMove(position, FromX, FromY, x, y))
                 {
@@ -459,9 +459,9 @@ public class MovingOfChess
 
     private void GetR_ShiMove(int[,] position, int FromX, int FromY)
     {
-        for (int x = 7; x < 10; x++)
+        for (int x = 5; x < 10; x++)
         {
-            for (int y = 3; y < 6; y++)
+            for (int y = 0; y < 9; y++)
             {
                 if (gameManager.rules.IsValidMove(position, FromX, FromY, x, y))
                 {
@@ -899,9 +899,9 @@ public class MovingOfChess
 
     private void GetB_ShiMove(int[,] position, int FromX, int FromY, int depth)
     {
-        for (int x = 0; x < 3; x++)
+        for (int x = 0; x < 5; x++)
         {
-            for (int y = 3; y < 6; y++)
+            for (int y = 0; y < 9; y++)
             {
                 if (gameManager.rules.IsValidMove(position, FromX, FromY, x, y))
                 {
@@ -913,9 +913,9 @@ public class MovingOfChess
 
     private void GetR_ShiMove(int[,] position, int FromX, int FromY, int depth)
     {
-        for (int x = 7; x < 10; x++)
+        for (int x = 5; x < 10; x++)
         {
-            for (int y = 3; y < 6; y++)
+            for (int y = 0; y < 9; y++)
             {
                 if (gameManager.rules.IsValidMove(position, FromX, FromY, x, y))
                 {

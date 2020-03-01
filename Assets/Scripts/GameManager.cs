@@ -364,7 +364,7 @@ public class GameManager : MonoBehaviour
         HideCanEatUI();
         ClearCurrentCanMoveUIStack();
         lastChessOrGrid = null;
-        UiManager.Instance.ShowTip("红方走");
+        UiManager.Instance.ShowTip("赤の番");
         for (int i = chessReseting.resetCount; i > 0; i--)
         {
             chessReseting.ResetChess();
@@ -490,11 +490,11 @@ public class GameManager : MonoBehaviour
             chessMove = !chessMove;
             if (chessMove)
             {
-                UiManager.Instance.ShowTip("红方走");
+                UiManager.Instance.ShowTip("赤の番");
             }
             else
             {
-                UiManager.Instance.ShowTip("黑方走");
+                UiManager.Instance.ShowTip("黒の番");
             }
         }
         int gameState = gameCodeReceive[0];
