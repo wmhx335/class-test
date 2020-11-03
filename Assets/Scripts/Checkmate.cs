@@ -1,9 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-/// <summary>
-/// 检测是否将军
-/// </summary>
+
 public class Checkmate
 {
     private GameManager gameManager;
@@ -19,20 +17,13 @@ public class Checkmate
     public void JudgeIfCheckmate()
     {
         GetKingPosition();
-        //将不存在
         if (gameManager.chessBoard[jiangX,jiangY]!=1)
         {
             uiManager.ShowTip("赤の勝利");
             AudioSourceManager.Instance.PlaySound(6);
-            if (gameManager.chessPeople==3)
-            {
-                gameManager.gameCodeReceive[0] = 1;
-                UiManager.Instance.CanClickStartButton(true);
-            }
             gameManager.gameOver = true;
             return;
         }
-        //帅不存在
         else if (gameManager.chessBoard[shuaiX,shuaiY]!=8)
         {
             uiManager.ShowTip("黒の勝利");
@@ -44,27 +35,9 @@ public class Checkmate
             {
                 AudioSourceManager.Instance.PlaySound(6);
             }
-            else
-            {
-                if (gameManager.isServer)
-                {
-                    AudioSourceManager.Instance.PlaySound(7);
-                }
-                else
-                {
-                    AudioSourceManager.Instance.PlaySound(6);
-                }
-            }
-
-            if (gameManager.chessPeople == 3)
-            {
-                gameManager.gameCodeReceive[0] = 1;
-                UiManager.Instance.CanClickStartButton(true);
-            }
             gameManager.gameOver = true;
             return;
         }
-        //将军判定
         bool ifCheckmate;
 
         for (int i = 0; i < 10; i++)
@@ -78,7 +51,7 @@ public class Checkmate
                         if (ifCheckmate)
                         {
                             AudioSourceManager.Instance.PlaySound(4);
-                            uiManager.ShowTip("王手");
+                            uiManager.ShowTip("チェックメイト");
                         }
                         break;
                     case 3:
@@ -86,7 +59,7 @@ public class Checkmate
                         if (ifCheckmate)
                         {
                             AudioSourceManager.Instance.PlaySound(4);
-                            uiManager.ShowTip("王手");
+                            uiManager.ShowTip("チェックメイト");
                         }
                         break;
                     case 4:
@@ -94,7 +67,7 @@ public class Checkmate
                         if (ifCheckmate)
                         {
                             AudioSourceManager.Instance.PlaySound(4);
-                            uiManager.ShowTip("王手");
+                            uiManager.ShowTip("チェックメイト");
                         }
                         break;
                     case 7:
@@ -102,7 +75,7 @@ public class Checkmate
                         if (ifCheckmate)
                         {
                             AudioSourceManager.Instance.PlaySound(4);
-                            uiManager.ShowTip("王手");
+                            uiManager.ShowTip("チェックメイト");
                         }
                         break;
                     case 9:
@@ -110,7 +83,7 @@ public class Checkmate
                         if (ifCheckmate)
                         {
                             AudioSourceManager.Instance.PlaySound(4);
-                            uiManager.ShowTip("王手");
+                            uiManager.ShowTip("チェックメイト");
                         }
                         break;
                     case 10:
@@ -118,7 +91,7 @@ public class Checkmate
                         if (ifCheckmate)
                         {
                             AudioSourceManager.Instance.PlaySound(4);
-                            uiManager.ShowTip("王手");
+                            uiManager.ShowTip("チェックメイト");
                         }
                         break;
                     case 11:
@@ -126,7 +99,7 @@ public class Checkmate
                         if (ifCheckmate)
                         {
                             AudioSourceManager.Instance.PlaySound(4);
-                            uiManager.ShowTip("王手");
+                            uiManager.ShowTip("チェックメイト");
                         }
                         break;
                     case 14:
@@ -134,7 +107,7 @@ public class Checkmate
                         if (ifCheckmate)
                         {
                             AudioSourceManager.Instance.PlaySound(4);
-                            uiManager.ShowTip("王手");
+                            uiManager.ShowTip("チェックメイト");
                         }
                         break;
                     default:
@@ -145,12 +118,9 @@ public class Checkmate
 
     }
 
-    /// <summary>
-    /// 获取将帅位置
-    /// </summary>
     private void GetKingPosition()
     {
-        //获取黑将
+
         for (int i = 0; i < 3; i++)
         {
             for (int j = 3; j < 6; j++)
@@ -163,7 +133,6 @@ public class Checkmate
             }
         }
 
-        //获取红帅
         for (int i = 7; i < 10; i++)
         {
             for (int j = 3; j < 6; j++)

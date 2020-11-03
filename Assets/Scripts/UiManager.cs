@@ -3,21 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-/// <summary>
-/// 控制页面之间的显示与跳转，按钮的触发方法，在gameManager之后实例化
-/// </summary>
-
-
 
 public class UiManager : MonoBehaviour
 {
     public static UiManager Instance { get; private set; }
 
-    public GameObject[] panels;//0.主菜单 1.单机 2.模式选择 3. 难度选择 4.单机游戏 5.联网游戏
+    public GameObject[] panels;//0.MainMenu 1.Player 2.Model 3. Level 
 
-    public Text tipUIText;//当前需要具体改变文本的显示UI
+    public Text tipUIText;
 
-    public Text[] tipUITexts;//两个对应显示UI的引用
+    public Text[] tipUITexts;
     [HideInInspector]
     public GameManager gameManager;
 
@@ -35,28 +30,15 @@ public class UiManager : MonoBehaviour
 
     }
 
-    #region 页面跳转
+    #region Panel
 
     /// <summary>
-    /// 单机模式
+    /// Player
     /// </summary>
     public void StandaloneMode()
     {
         panels[0].SetActive(false);
         panels[1].SetActive(true);
-    }
-
-    /// <summary>
-    /// 联网模式
-    /// </summary>
-    public void NetWorkingMode()
-    {
-        panels[0].SetActive(false);
-        panels[5].SetActive(true);
-        gameManager.PlayerConnected();
-        gameManager.chessPeople = 3;
-        tipUIText = tipUITexts[1];
-        CanClickStartButton(false);
     }
 
     public void ExitGame()
@@ -65,7 +47,7 @@ public class UiManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 人机模式
+    /// PVE
     /// </summary>
     public void PVEMode()
     {
@@ -75,7 +57,7 @@ public class UiManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 双人模式
+    /// PVP
     /// </summary>
 
     public void PVPMode()
@@ -96,7 +78,7 @@ public class UiManager : MonoBehaviour
 
     #endregion
 
-    #region 加载游戏
+    #region GameLoad
     private void LoadGame()
     {
         gameManager.ResetGame();
@@ -114,26 +96,17 @@ public class UiManager : MonoBehaviour
 
     #endregion
 
-    #region 游戏中的UI方法
-    /// <summary>
-    /// 悔棋
-    /// </summary>
+    #region UI
+
     public void UnDo()
     {
         gameManager.chessReseting.ResetChess();
     }
 
-    /// <summary>
-    /// 重玩
-    /// </summary>
     public void Replay()
     {
         gameManager.Replay();
     }
-
-    /// <summary>
-    /// 返回
-    /// </summary>
     public void ReturnToMain()
     {
         panels[4].SetActive(false);
@@ -150,25 +123,6 @@ public class UiManager : MonoBehaviour
         tipUIText.text = str;
     }
 
-    /// <summary>
-    /// 开始联网
-    /// </summary>
-    public void StartNetWorkingMode()
-    {
-        gameManager.BeReady();
-    }
-
-    /// <summary>
-    /// 认输
-    /// </summary>
-    public void GiveUp()
-    {
-        gameManager.GiveUp();
-    }
-
-    /// <summary>
-    /// 是否可以点击开始按钮
-    /// </summary>
     public void CanClickStartButton(bool canClick)
     {
         if (canClick)

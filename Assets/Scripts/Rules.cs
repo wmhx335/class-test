@@ -2,21 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// 规则
-/// </summary>
 public class Rules
 {
 
-    /// <summary>
-    /// 检查当前移动是符合法
-    /// </summary>
-    /// <param name="position">当前棋盘状况</param>
-    /// <param name="FromX">起始x索引</param>
-    /// <param name="FromY">起始y索引</param>
-    /// <param name="ToX">终点x索引</param>
-    /// <param name="ToY">终点y索引</param>
-    /// <returns></returns>
     public bool IsValidMove(int[,] position, int FromX, int FromY, int ToX, int ToY)
     {
         int moveChessID, targetID;
@@ -30,10 +18,6 @@ public class Rules
         return IsVaild(moveChessID, position, FromX, FromY, ToX, ToY);
     }
 
-    /// <summary>
-    /// 判断选中的两个目标是否同为空格或同为一色棋子
-    /// </summary>
-    /// <returns></returns>
     public bool IsSameSide(int x, int y)
     {
         if (isBlack(x) && isBlack(y) || isRed(x) && isRed(y))
@@ -69,18 +53,9 @@ public class Rules
         }
     }
 
-    /// <summary>
-    /// 所有种类棋子的走法是否合法
-    /// </summary>
-    /// <param name="moveChessID"></param>
-    /// <param name="postion"></param>
-    /// <param name="FromX"></param>
-    /// <param name="FromY"></param>
-    /// <param name="ToX"></param>
-    /// <param name="ToY"></param>
     public bool IsVaild(int moveChessID, int[,] position, int FromX, int FromY, int ToX, int ToY)
     {
-        if (FromX == ToX && FromY == ToY)//原地踏步
+        if (FromX == ToX && FromY == ToY)
         {
             return false;
         }
@@ -92,9 +67,8 @@ public class Rules
         int i = 0, j = 0;
         switch (moveChessID)
         {
-            //红黑棋子分别处理
-            case 1://黑将
-                if (ToX > 2 || ToY > 5 || ToY < 3)//出九宫格
+            case 1://将
+                if (ToX > 2 || ToY > 5 || ToY < 3)
                 {
                     return false;
                 }
@@ -103,8 +77,8 @@ public class Rules
                     return false;
                 }
                 break;
-            case 8://红帅
-                if (ToX < 7 || ToY > 5 || ToY < 3)//出九宫格
+            case 8://帅
+                if (ToX < 7 || ToY > 5 || ToY < 3)
                 {
                     return false;
                 }
@@ -113,20 +87,30 @@ public class Rules
                     return false;
                 }
                 break;
-            case 5://黑士
-                if (Mathf.Abs(FromX - ToX) != 1 || Mathf.Abs(FromY - ToY) != 1)//走斜线
-                {
-                    return false;
-                }
-                break;
-            case 12://红仕
+            case 5://士
                 if (Mathf.Abs(FromX - ToX) != 1 || Mathf.Abs(FromY - ToY) != 1)
                 {
                     return false;
                 }
                 break;
-            case 6://黑象
-                if (Mathf.Abs(FromX - ToX) != 2 || Mathf.Abs(FromY - ToY) != 2)//走田字
+            case 12://仕
+                if (Mathf.Abs(FromX - ToX) != 1 || Mathf.Abs(FromY - ToY) != 1)
+                {
+                    return false;
+                }
+                break;
+            case 6://象
+                if (Mathf.Abs(FromX - ToX) != 2 || Mathf.Abs(FromY - ToY) != 2)
+                {
+                    return false;
+                }
+                if (position[(FromX + ToX) / 2, (FromY + ToY) / 2] != 0)
+                {
+                    return false;
+                }
+                break;
+            case 13://相
+                if (Mathf.Abs(FromX - ToX) != 2 || Mathf.Abs(FromY - ToY) != 2)
                 {
                     return false;
                 }
@@ -136,19 +120,8 @@ public class Rules
                     return false;
                 }
                 break;
-            case 13://红相
-                if (Mathf.Abs(FromX - ToX) != 2 || Mathf.Abs(FromY - ToY) != 2)//走田字
-                {
-                    return false;
-                }
-                //塞象眼
-                if (position[(FromX + ToX) / 2, (FromY + ToY) / 2] != 0)
-                {
-                    return false;
-                }
-                break;
-            case 7://黑卒
-                if (ToX < FromX)//永不后退！
+            case 7://卒
+                if (ToX < FromX)
                 {
                     return false;
                 }
@@ -161,8 +134,8 @@ public class Rules
                     return false;
                 }
                 break;
-            case 14://红兵
-                if (ToX > FromX)//永不后退！
+            case 14://兵
+                if (ToX > FromX)
                 {
                     return false;
                 }
@@ -175,27 +148,26 @@ public class Rules
                     return false;
                 }
                 break;
-            //红黑棋子共用
+
             case 2:
-            case 9://红黑車
-                if (FromX != ToX && FromY != ToY)//直走
+            case 9://車
+                if (FromX != ToX && FromY != ToY)
                 {
                     return false;
                 }
-                //判断当前移动路径上是否有其他棋子
                 if (FromX == ToX)
                 {
-                    if (FromY < ToY)//右走
+                    if (FromY < ToY)
                     {
                         for (i = FromY + 1; i < ToY; i++)
                         {
-                            if (position[FromX, i] != 0)//移动路径上有其他棋子
+                            if (position[FromX, i] != 0)
                             {
                                 return false;
                             }
                         }
                     }
-                    else//左走
+                    else
                     {
                         for (i = ToY + 1; i < FromY; i++)
                         {
@@ -208,7 +180,7 @@ public class Rules
                 }
                 else
                 {
-                    if (FromX < ToX)//下走
+                    if (FromX < ToX)
                     {
                         for (j = FromX + 1; j < ToX; j++)
                         {
@@ -218,7 +190,7 @@ public class Rules
                             }
                         }
                     }
-                    else//上走
+                    else
                     {
                         for (j = ToX + 1; j < FromX; j++)
                         {
@@ -231,32 +203,28 @@ public class Rules
                 }
                 break;
             case 3:
-            case 10://红黑马
-                //马走日
-                //竖日
+            case 10://馬
                 if (!((Mathf.Abs(ToY - FromY) == 1 && Mathf.Abs(ToX - FromX) == 2) ||
-                    //横日
                     (Mathf.Abs(ToY - FromY) == 2 && Mathf.Abs(ToX - FromX) == 1)))
                 {
                     return false;
                 }
-                //马蹩腿
-                if (ToY - FromY == 2)//右日
+                if (ToY - FromY == 2)
                 {
                     i = FromY + 1;
                     j = FromX;
                 }
-                else if (FromY - ToY == 2)//左日
+                else if (FromY - ToY == 2)
                 {
                     i = FromY - 1;
                     j = FromX;
                 }
-                else if (ToX - FromX == 2)//下日
+                else if (ToX - FromX == 2)
                 {
                     i = FromY;
                     j = FromX + 1;
                 }
-                else if (FromX - ToX == 2)//上日
+                else if (FromX - ToX == 2)
                 {
                     i = FromY;
                     j = FromX - 1;
@@ -267,30 +235,27 @@ public class Rules
                 }
                 break;
             case 4:
-            case 11://红黑炮
-                //走直线
+            case 11://炮
                 if (FromY != ToY && FromX != ToX)
                 {
                     return false;
                 }
-                //移动或吃子
-                //移动
                 if (position[ToX, ToY] == 0)
                 {
-                    //横线
+
                     if (FromX == ToX)
                     {
-                        if (FromY < ToY)//右走
+                        if (FromY < ToY)
                         {
                             for (i = FromY + 1; i < ToY; i++)
                             {
-                                if (position[FromX, i] != 0)//移动路径上有其他棋子
+                                if (position[FromX, i] != 0)
                                 {
                                     return false;
                                 }
                             }
                         }
-                        else//左走
+                        else
                         {
                             for (i = ToY + 1; i < FromY; i++)
                             {
@@ -301,10 +266,10 @@ public class Rules
                             }
                         }
                     }
-                    //竖线
+
                     else
                     {
-                        if (FromX < ToX)//下走
+                        if (FromX < ToX)
                         {
                             for (j = FromX + 1; j < ToX; j++)
                             {
@@ -314,7 +279,7 @@ public class Rules
                                 }
                             }
                         }
-                        else//上走
+                        else
                         {
                             for (j = ToX + 1; j < FromX; j++)
                             {
@@ -326,14 +291,12 @@ public class Rules
                         }
                     }
                 }
-                //吃子
                 else
                 {
                     int count = 0;
-                    //横线
                     if (FromX == ToX)
                     {
-                        //右
+
                         if (FromY < ToY)
                         {
                             for (i = FromY+1; i < ToY; i++)
@@ -348,7 +311,6 @@ public class Rules
                                 return false;
                             }
                         }
-                        //左
                         else
                         {
                             for (i = ToY+1; i < FromY; i++)
@@ -364,10 +326,8 @@ public class Rules
                             }
                         }
                     }
-                    //竖线
                     else
                     {
-                        //下
                         if (FromX < ToX)
                         {
                             for (j = FromX + 1; j < ToX; j++)
@@ -383,7 +343,6 @@ public class Rules
                                 return false;
                             }
                         }
-                        //上
                         else
                         {
                             for (j = ToX + 1; j < FromX; j++)
@@ -409,20 +368,11 @@ public class Rules
 
     }
 
-    /// <summary>
-    /// 判断将帅是否在同一直线上
-    /// </summary>
-    /// <param name="position"></param>
-    /// <param name="FromX"></param>
-    /// <param name="FromY"></param>
-    /// <param name="ToX"></param>
-    /// <param name="ToY"></param>
-    /// <returns></returns>
     public bool KingKill(int[,] position, int FromX, int FromY, int ToX, int ToY)
     {
         int jiangX = 0, jiangY = 0, shuaiX = 0, shuaiY = 0;
         int count = 0;
-        int[,] position1 = new int[10, 9];//假设一个虚拟棋盘测试将帅是否即将在同一直线上
+        int[,] position1 = new int[10, 9];
         for (int i = 0; i < 10; i++)
         {
             for (int j = 0; j < 9; j++)
@@ -468,7 +418,7 @@ public class Rules
         {
             count = -1;
         }
-        if (count == 0)//不合法
+        if (count == 0)
         {
             return false;
         }

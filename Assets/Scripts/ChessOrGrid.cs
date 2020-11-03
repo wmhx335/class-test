@@ -1,25 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-
-/// <summary>
-/// 棋子或者格子的脚本
-/// </summary>
-
 public class ChessOrGrid : MonoBehaviour
 {
-    //格子索引
     public int xIndex, yIndex;
-    //红黑棋判断
     public bool isRed;
-    //是否为格子
     public bool isGrid;
-    //游戏管理的引用
     public GameManager gameManager;
-    //移动时需要设置的父对象，如果当前对象是棋子，则得到它的父对象而不是它本身
     private GameObject gridGo;
-
 
     // Start is called before the first frame update
     void Start()
@@ -28,10 +16,6 @@ public class ChessOrGrid : MonoBehaviour
         gridGo = gameObject;
     }
 
-
-    /// <summary>
-    /// 点击棋子或格子时触发的检测方法
-    /// </summary>
     public void ClickCheck()
     {
         if (gameManager.gameOver)
@@ -45,7 +29,7 @@ public class ChessOrGrid : MonoBehaviour
         }
         else
         {
-            gridGo = transform.parent.gameObject;//得到他的父容器
+            gridGo = transform.parent.gameObject;
             ChessOrGrid chessOrGrid = gridGo.GetComponent<ChessOrGrid>();
             xIndex = chessOrGrid.xIndex;
             yIndex = chessOrGrid.yIndex;
@@ -61,12 +45,7 @@ public class ChessOrGrid : MonoBehaviour
         GridOrChessBehavior(itemColorId,xIndex,yIndex);
 
     }
-    /// <summary>
-    /// 格子与棋子的行为逻辑
-    /// </summary>
-    /// <param name="itemColorID">格子颜色ID</param>
-    /// <param name="x">当前格子x索引</param>
-    /// <param name="y">当前格子y索引</param>
+
     private void GridOrChessBehavior(int itemColorID,int x,int y)
     {
 
@@ -74,36 +53,29 @@ public class ChessOrGrid : MonoBehaviour
         gameManager.HideCanEatUI();
         switch (itemColorID)
         {
-            //空格子
             case 0:
                 gameManager.ClearCurrentCanMoveUIStack();
                 ToX = x;
                 ToY = y;
-                //第一次点空格子
                 if(gameManager.lastChessOrGrid==null)
                 {
                     gameManager.lastChessOrGrid = this;
                     return;
                 }
-                if (gameManager.chessMove)//红方轮次
+                if (gameManager.chessMove)//redTurn
                 {
-                    if (gameManager.lastChessOrGrid.isGrid)//上一次选中是否为格子
+                    if (gameManager.lastChessOrGrid.isGrid)
                     {
                         return;
                     }
-                    if(!gameManager.lastChessOrGrid.isRed)//上次选中是否为黑色
-                    {
-                        gameManager.lastChessOrGrid = null;
-                        return;
-                    }
-                    if (gameManager.chessPeople==3&&!gameManager.isServer)
+                    if(!gameManager.lastChessOrGrid.isRed)
                     {
                         gameManager.lastChessOrGrid = null;
                         return;
                     }
+
                     FromX =gameManager.lastChessOrGrid.xIndex;
                     FromY =gameManager.lastChessOrGrid.yIndex;
-                    //判断合法
                     bool canMove = gameManager.rules.IsValidMove(gameManager.chessBoard,FromX,FromY,ToX,ToY);
                     if (!canMove)
                     {
@@ -119,12 +91,6 @@ public class ChessOrGrid : MonoBehaviour
                     gameManager.chessMove = false;
                     gameManager.lastChessOrGrid = this;
                     gameManager.HideClickUI();
-                    //联网模式 将当前着法做成消息序列并发送
-                    if (gameManager.chessPeople==3)
-                    {
-                        gameManager.gameServer.SendMsg(new int[6] { 0,1,FromX,FromY,ToX,ToY});
-                        return;
-                    }
                     if (gameManager.gameOver)
                     {
                         return;
@@ -133,24 +99,18 @@ public class ChessOrGrid : MonoBehaviour
                     {
                         return;
                     }
-                    //黑方轮次 AI下棋
                     if (!gameManager.chessMove)
                     {
                         StartCoroutine("Robot");
                     }
                 }
-                else//黑方轮次
+                else//blackTurn
                 {
                     if (gameManager.lastChessOrGrid.isGrid)
                     {
                         return;
                     }
                     if(gameManager.lastChessOrGrid.isRed)
-                    {
-                        gameManager.lastChessOrGrid = null;
-                        return;
-                    }
-                    if (gameManager.chessPeople == 3 && gameManager.isServer)
                     {
                         gameManager.lastChessOrGrid = null;
                         return;
@@ -171,39 +131,21 @@ public class ChessOrGrid : MonoBehaviour
                     gameManager.chessMove = true;
                     gameManager.lastChessOrGrid = this;
                     gameManager.HideClickUI();
-                    //联网模式 将当前着法做成消息序列并发送
-                    if (gameManager.chessPeople == 3)
-                    {
-                        gameManager.gameCilient.SendMsg(new int[6] { 0, 0, FromX, FromY, ToX, ToY });
-                    }
                 }
                 break;
 
-            //黑棋
             case 1:
                 gameManager.ClearCurrentCanMoveUIStack();
-                if (!gameManager.chessMove)//黑色轮次
+                if (!gameManager.chessMove)//blackTurn
                 {
-                    if (gameManager.chessPeople==3&&gameManager.isServer)
-                    {
-                        gameManager.lastChessOrGrid = null;
-                        return;
-                    }
                     FromX = x;
                     FromY = y;
-                    //显示所有可移动路径
                     gameManager.movingOfChess.ClickChess(FromX, FromY);
                     gameManager.lastChessOrGrid = this;
                     gameManager.ShowClickUI(transform);
                 }
-                else//红色轮次
+                else//redTurn
                 {
-                    //红吃黑
-                    if (gameManager.chessPeople == 3 && !gameManager.isServer)
-                    {
-                        gameManager.lastChessOrGrid = null;
-                        return;
-                    }
                     if (gameManager.lastChessOrGrid==null)
                     {
                         return;
@@ -231,12 +173,6 @@ public class ChessOrGrid : MonoBehaviour
                     gameManager.lastChessOrGrid = null;
                     gameManager.checkmate.JudgeIfCheckmate();
                     gameManager.HideClickUI();
-                    //联网模式 将当前着法做成消息序列并发送
-                    if (gameManager.chessPeople == 3)
-                    {
-                        gameManager.gameServer.SendMsg(new int[6] { 0, 1, FromX, FromY, ToX, ToY });
-                        return;
-                    }
                     if (gameManager.gameOver)
                     {
                         return;
@@ -253,16 +189,11 @@ public class ChessOrGrid : MonoBehaviour
                 }
                 break;
 
-            //红棋
             case 2:
                 gameManager.ClearCurrentCanMoveUIStack();
-                if (gameManager.chessMove)//红色轮次
+                if (gameManager.chessMove)//redTurn
                 {
-                    if (gameManager.chessPeople == 3 && !gameManager.isServer)
-                    {
-                        gameManager.lastChessOrGrid = null;
-                        return;
-                    }
+
                     FromX = x;
                     FromY = y;
 
@@ -270,14 +201,8 @@ public class ChessOrGrid : MonoBehaviour
                     gameManager.lastChessOrGrid = this;
                     gameManager.ShowClickUI(transform);
                 }
-                else//黑色轮次
+                else
                 {
-                    //黑吃红
-                    if (gameManager.chessPeople == 3 && gameManager.isServer)
-                    {
-                        gameManager.lastChessOrGrid = null;
-                        return;
-                    }
                     if (gameManager.lastChessOrGrid == null)
                     {
                         return;
@@ -305,11 +230,6 @@ public class ChessOrGrid : MonoBehaviour
                     gameManager.lastChessOrGrid = null;
                     gameManager.checkmate.JudgeIfCheckmate();
                     gameManager.HideClickUI();
-                    //联网模式 将当前着法做成消息序列并发送
-                    if (gameManager.chessPeople == 3)
-                    {
-                        gameManager.gameCilient.SendMsg(new int[6] { 0, 0, FromX, FromY, ToX, ToY });
-                    }
                 }
                 break;
 
@@ -320,19 +240,15 @@ public class ChessOrGrid : MonoBehaviour
 
     }
     /// <summary>
-    /// 开启AI下棋的协程
+    /// AI
     /// </summary>
-    /// <returns></returns>
     IEnumerator Robot()
     {
-        UiManager.Instance.ShowTip("对方正在思考");
+        UiManager.Instance.ShowTip("考え中");
         yield return new WaitForSeconds(0.2f);
         RobortMove();
     }
 
-    /// <summary>
-    /// AI下棋方法
-    /// </summary>
     private void RobortMove()
     {
         gameManager.movingOfChess.HaveGoodMove(
